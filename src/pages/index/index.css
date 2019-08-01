@@ -1,0 +1,92 @@
+/*首页banner图片轮播开始*/
+.u-wrp-bnr {
+  width: 95%;
+  height: 400rpx;
+  display: block;
+  position: relative;
+  background: #FFFFFF;
+  top:10rpx;
+  left:20rpx;
+  right: 20rpx; 
+  bottom: 30rpx;
+}
+.u-img-slide {
+  width: 100%;
+  height: inherit;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius:15px;
+}
+/*首页banner图片轮播结束*/
+/*产品列表开始*/
+    page {
+        background: #F8F8F8;
+    }
+
+    view {
+        font-size: 28upx;
+    }
+
+    .uni-product-list {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+
+    .uni-product {
+        padding: 20upx;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .image-view {
+        height: 330upx;
+        width: 330upx;
+        margin: 12upx 0;
+    }
+
+    .uni-product-image {
+        height: 330upx;
+        width: 330upx;
+    }
+
+    .uni-product-title {
+        width: 300upx;
+        word-break: break-all;
+        display: -webkit-box;
+        overflow: hidden;
+        line-height: 1.5;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .uni-product-price {
+        margin-top: 10upx;
+        font-size: 28upx;
+        line-height: 1.5;
+        position: relative;
+    }
+
+    .uni-product-price-original {
+        color: #e80080;
+    }
+
+    .uni-product-price-favour {
+        color: #888888;
+        text-decoration: line-through;
+        margin-left: 10upx;
+    }
+
+    .uni-product-tip {
+        position: absolute;
+        right: 10upx;
+        background-color: #ff3333;
+        color: #ffffff;
+        padding: 0 10upx;
+        border-radius: 5upx;
+    }
+	/*产品列表结束*/
+	/*搜索框开始*/
+	/*搜索框结束*/
