@@ -11,6 +11,11 @@
                 </view>
             </view>
         </view>
+		
+		<view class="product-text">
+			<text>泰国旅游 普吉岛蓝钻岛大长岛6天5晚网红跟团游 飞猪旅行含机票</text>
+		</view>
+		
 	</view>	
 </template>
 
@@ -60,4 +65,9 @@
   border-radius:15px;
 }
 /*首页banner图片轮播结束*/
+.product-text{
+	margin-top: 20upx;
+	font-size: 30upx;
+	line-height: 1.5;
+}
 </style>

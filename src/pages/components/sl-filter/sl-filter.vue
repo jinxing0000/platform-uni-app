@@ -274,7 +274,7 @@
 		background-color: #FFFFFF;
 		display: flex;
 		width: 100%;
-		position: fixed;
+		/* position: fixed; */
 		/* #ifdef H5 */
 		top: 44px;
 		/* #endif */
@@ -298,12 +298,5 @@
 	.select-tab-fixed-top .select-tab-item text {
 		color: #666666;
 		font-size: 14px;
-	}
-	.content{
-		position: fixed;
-		height: 100%;
-	    width: 100%;
-		z-index:999;
-		top:0px;
 	}
 </style>

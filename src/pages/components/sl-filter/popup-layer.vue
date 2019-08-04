@@ -105,7 +105,7 @@
 <style>
 	.popup-layer {
 		position: absolute;
-		z-index: 999999;
+		z-index: 1;
 		background: rgba(0, 0, 0, .3);
 		height: calc(100% - 50px);
 		width: 100%;
@@ -115,7 +115,7 @@
 
 	.popup-content {
 		position: absolute;
-		z-index: 1000000;
+		z-index: 2;
 		background: #FFFFFF;
 		transition: all .3s ease;
 	}

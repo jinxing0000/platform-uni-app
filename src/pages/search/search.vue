@@ -115,6 +115,9 @@
 						}
 					})
 				}
+				uni.switchTab({
+					url: '/pages/product/productList/productList'
+				});
 			},
 			keywordsClick (item) {	//推荐搜索
 				this.searchText = item;

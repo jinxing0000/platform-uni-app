@@ -5,10 +5,10 @@
   display: block;
   position: relative;
   background: #FFFFFF;
-  top:10rpx;
+  padding-top: 90rpx;
   left:20rpx;
   right: 20rpx; 
-  bottom: 30rpx;
+  bottom: 5rpx;
 }
 .u-img-slide {
   width: 100%;
