@@ -18,8 +18,10 @@
 			<view class="tui-product-title tui-border-radius">
 				<view class="tui-pro-pricebox tui-padding">
 					<view class="tui-pro-price">
-						<view>￥<text class="tui-price">5000.99</text></view>
-						<tui-tag size="small" :plain="true" type="high-green" shape="circle">新品</tui-tag>
+						<view>￥<text class="tui-price">4999元</text></view>
+						<!-- <tui-tag size="small" :plain="true" type="high-green" shape="circle">精品</tui-tag> -->
+						<!-- <tui-tag :plain="true" type="danger">精品路线</tui-tag> -->
+						<tui-tag shape="circleRight">精品路线</tui-tag>
 					</view>
 				</view>
 				<view class="tui-pro-titbox">
@@ -137,45 +139,33 @@
 				</view>
 			</view> -->
 		
-			<view class="tui-nomore-box">
-				<tui-nomore text="产品特色" :visible="true" bgcolor="#f7f7f7"></tui-nomore>
-			</view>
+			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">产品特色</tui-divider>
 			<view class="tui-product-img tui-radius-all">
 				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
 			</view>
 			
 			
-			<view class="tui-nomore-box">
-				<tui-nomore text="行程介绍" :visible="true" bgcolor="#f7f7f7"></tui-nomore>
-			</view>
+			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">行程介绍</tui-divider>
 			<view class="tui-product-img tui-radius-all">
 				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
 			</view>
 			
-			<view class="tui-nomore-box">
-				<tui-nomore text="费用包含" :visible="true" bgcolor="#f7f7f7"></tui-nomore>
-			</view>
+			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">费用包含</tui-divider>
 			<view class="tui-product-img tui-radius-all">
 				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
 			</view>
 			
-			<view class="tui-nomore-box">
-				<tui-nomore text="费用不含" :visible="true" bgcolor="#f7f7f7"></tui-nomore>
-			</view>
+			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">费用不含</tui-divider>
 			<view class="tui-product-img tui-radius-all">
 				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
 			</view>
 			
-			<view class="tui-nomore-box">
-				<tui-nomore text="预定须知" :visible="true" bgcolor="#f7f7f7"></tui-nomore>
-			</view>
+			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">预定须知</tui-divider>
 			<view class="tui-product-img tui-radius-all">
 				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
 			</view>
 			
-			<view class="tui-nomore-box">
-				<tui-nomore text="退改规则" :visible="true" bgcolor="#f7f7f7"></tui-nomore>
-			</view>
+			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">退改规则</tui-divider>
 			<view class="tui-product-img tui-radius-all">
 				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
 			</view>
@@ -189,13 +179,13 @@
 		<!--底部操作栏-->
 		<view class="tui-operation">
 			<view class="tui-operation-left tui-col-5">
-				<button class="share">
+				<button class="share" @click="goToHome()">
 					<view class="tui-operation-item" hover-class="opcity" :hover-stay-time="150">
 							<tui-icon name="home" :size="22" color='#333'></tui-icon>
 							<view class="tui-operation-text tui-scale-small">首页</view>
 					</view>
 				</button>
-				<button class="share">
+				<button class="share" @click="cellPhone()">
 					<view class="tui-operation-item" hover-class="opcity" :hover-stay-time="150">
 							<tui-icon name="kefu" :size="22" color='#333'></tui-icon>
 							<view class="tui-operation-text tui-scale-small">咨询</view>
@@ -235,6 +225,7 @@
 	import tuiTopDropdown from "../../components/top-dropdown/top-dropdown"
 	import tuiBottomPopup from "../../components/bottom-popup/bottom-popup"
 	import tuiNumberbox from "../../components/numberbox/numberbox"
+	import tuiDivider from "../../components/divider/divider"
 	export default {
 		components: {
 			tuiIcon,
@@ -244,7 +235,8 @@
 			tuiButton,
 			tuiTopDropdown,
 			tuiBottomPopup,
-			tuiNumberbox
+			tuiNumberbox,
+			tuiDivider
 		},
 		data() {
 			return {
@@ -298,6 +290,16 @@
 					urls: this.banner
 				})
 			},
+			goToHome:function(){
+				uni.switchTab({
+					url: '/pages/index/index'
+				});
+			},
+			cellPhone:function(){
+				uni.makePhoneCall({
+					phoneNumber: '18335461816' //仅为示例
+				});
+			}
 		}
 	}
 </script>
