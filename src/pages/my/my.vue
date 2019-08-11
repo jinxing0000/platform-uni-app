@@ -8,10 +8,10 @@
 				<text class='logout-txt' v-show='isLogin'>退出</text>
 			</view>
 			<view v-show="!isLogin" class='user-wrapper'>
-				<navigator hover-class="opcity" :hover-stay-time="150" class='user'>
+				<navigator hover-class="opcity" :hover-stay-time="150" class='user' @click="goRegister()">
 					<image class='avatar-img' :src="avatarUrl"></image>
-					<text class='user-info-mobile'>请登录</text>
-					<button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="getUserInfo">获取用户信息</button>
+					<text class='user-info-mobile'>成为渠道商</text>
+					<!-- <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="getUserInfo">获取用户信息</button> -->
 				</navigator>
 			</view>
 			<view v-show='isLogin' class='user'>
@@ -25,69 +25,69 @@
 			</view>
 		</view>
 
-		<view class='middle-container'>
-			<view data-url='../myWashTicket/myWashTicket' @tap='tapEvent' data-index="1" class='middle-item' hover-class="opcity"
-			 :hover-stay-time="150">
-				<image class='ticket-img' src='../../static/my/thorui.png'></image>
-				<text class='middle-tag'>Thor UI</text>
-			</view>
-			<!-- #ifdef APP-PLUS || MP -->
-			<view @tap='github(1)' class='middle-item' hover-class="opcity" :hover-stay-time="150">
-				<image class='car-img' src='../../static/my/github_3x.png'></image>
-				<text class='middle-tag'>GitHub</text>
-			</view>
-			<!-- #endif -->
-
-			<!-- #ifdef H5 -->
-			<view @tap='github(2)' class='middle-item' hover-class="opcity" :hover-stay-time="150">
-				<image class='car-img' src='../../static/my/github_3x.png'></image>
-				<text class='middle-tag'>GitHub</text>
-			</view>
-			<!-- #endif -->
-		</view>
 
 		<view class='bottom-container'>
 			<view class='ul-item'>
-				<view @tap='tapEvent' data-index="2" data-key='加油站' class='item' hover-class="opcity" :hover-stay-time="150">
-					<image class='item-img' src='../../static/my/mine_icon_jiayouzhan_3x.png'></image>
-					<text class='item-name'>加油站</text>
+				<view @tap='tapEvent' data-index="2" data-key='未处理订单' class='item' hover-class="opcity" :hover-stay-time="150">
+					<image class='item-img' src='../../static/my/dcldd.png'></image>
+					<text class='item-name'>未处理订单</text>
 				</view>
-				<view @tap='tapEvent' data-index="2" data-key='停车场' class='item' hover-class="opcity" :hover-stay-time="150">
-					<image class='item-img' src='../../static/my/mine_icon_tingche_3x.png'></image>
-					<text class='item-name'>停车场</text>
+				<view @tap='tapEvent' data-index="2" data-key='' class='item' hover-class="opcity" :hover-stay-time="150">
+					<image class='item-img' src='../../static/my/wcxdd.png'></image>
+					<text class='item-name'>待出行订单</text>
 				</view>
-				<view @tap='tapEvent' data-index="2" data-key='充电桩' class='item' hover-class="opcity" :hover-stay-time="150">
-					<image class='item-img' src='../../static/my/mine_icon_chongdian_3x.png'></image>
-					<text class='item-name'>充电桩</text>
-				</view>
-			</view>
-			<view class='ul-item'>
-				<view @tap='previewReward' class='item' hover-class="opcity" :hover-stay-time="150">
-					<image class='item-img' src='../../static/my/reward.png'></image>
-					<text class='item-name'>赞赏</text>
-				</view>
-				<view class='item' hover-class="opcity" :hover-stay-time="150">
-					<button open-type="feedback" class="btn-feedback"> </button>
-					<image class='item-img' src='../../static/my/feedback.png'></image>
-					<text class='item-name'>反馈</text>
-
-				</view>
-				<view @tap='tapEvent' data-index="3" class='item' hover-class="opcity" :hover-stay-time="150">
-					<image class='item-img' src='../../static/my/log.png'></image>
-					<text class='item-name'>日志</text>
+				<view @tap='tapEvent' data-index="2" data-key='已完成订单' class='item' hover-class="opcity" :hover-stay-time="150">
+					<image class='item-img' src='../../static/my/ywcdd.png'></image>
+					<text class='item-name'>已完成订单</text>
 				</view>
 			</view>
-
 		</view>
+		
+		<view class="tui-list-view">
+			<tui-list-cell @click="goToUserIno" :arrow="true" class="tui-list">
+				<tui-icon name="wealth-fill" size="24" color="#ff7900"></tui-icon>
+				<text class="tui-list-cell-name">渠道商信息</text>
+			</tui-list-cell>
+			<tui-list-cell @click="goToPedestriansList" :arrow="true" class="tui-list">
+				<image src="../../static/my/cxrxx.png" class="logo" mode="widthFix"></image>
+				<view class="tui-list-cell-name">出行人信息</view>
+			</tui-list-cell>
+			<tui-list-cell @click="detail" :arrow="true" class="tui-list">
+				<image src="../../static/my/kf.png" class="logo" mode="widthFix"></image>
+				<view class="tui-list-cell-name">客服中心</view>
+				<tui-tag size="small" type="light-green" shape="circle" class="tui-right">客服中心</tui-tag>
+			</tui-list-cell>
+			<!-- <tui-list-cell @click="detail" :arrow="true" class="tui-list">
+				<tui-icon name="shop-fill" size="23" color="#ed3f14"></tui-icon>
+				<view class="tui-list-cell-name">我的店铺</view>
+				<view class="tui-right">进入店铺</view>
+			</tui-list-cell> -->
+			<tui-list-cell @click="detail" :arrow="true" last="true" class="tui-list">
+				<image src="../../static/my/guanyu.png" class="logo" mode="widthFix"></image>
+				<text class="tui-list-cell-name">关于</text>
+				<view class="tui-right">山西省旅游信息平台</view>
+			</tui-list-cell>
+		</view>
+		
+		
+		
 	</view>
 </template>
 
 <script>
-	// import {
-	// 	mapState
-	// } from 'vuex'
+	import tuiListView from "../components/list-view/list-view"
+	import tuiListCell from "../components/list-cell/list-cell"
+	import tuiIcon from "../components/icon/icon"
+	import tuiTag from "../components/tag/tag"
+	import tuiBadge from "../components/badge/badge"
 	export default {
-		// computed: mapState(['isLogin', 'mobile']),
+		components: {
+			tuiListView,
+			tuiListCell,
+			tuiIcon,
+			tuiTag,
+			tuiBadge
+		},
 		data() {
 			return {
 				avatarUrl:"../../static/my/mine_def_touxiang_3x.png"
@@ -95,7 +95,7 @@
 		},
 		onShow: function() {},
 		onLoad() {
-			this.getWeiXinUserInfo();
+			//this.getWeiXinUserInfo();
 		},
 		methods: {
 			getUserInfo:function(e){
@@ -103,6 +103,24 @@
 				console.log(e.detail.errMsg)
 				console.log(e.detail.userInfo)
 				console.log(e.detail.rawData)
+			},
+			//到注册页面
+			goRegister:function(){
+				uni.navigateTo({
+					url: '/pages/register/register'
+				});
+			},
+			//到出行人列表页面
+			goToPedestriansList:function(){
+				uni.navigateTo({
+					url: '/pages/pedestrians/list/list'
+				});
+			},
+			//用户详情页面
+			goToUserIno:function(){
+				uni.navigateTo({
+					url: '/pages/userDetails/userDetails'
+				});
 			},
 			//获取微信用户信息
 			getWeiXinUserInfo:function(){
@@ -313,7 +331,7 @@
 	}
 
 	.bottom-container {
-		height: 334upx;
+		height: 213upx;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -358,5 +376,112 @@
 		width: 100%;
 		left: 0;
 		top: 0;
+	}
+	
+	
+	
+	/**  list  **/
+	.tui-list-view {
+		padding-top: 40upx !important
+	}
+	
+	.tui-list-cell-name {
+		padding-left: 20upx;
+		vertical-align: middle;
+		line-height: 55upx;
+	}
+	
+	.tui-list::after {
+		left: 94upx !important
+	}
+	
+	.tui-right {
+		margin-left: auto;
+		margin-right: 34upx;
+		font-size: 26upx;
+		line-height: 1;
+		color: #999;
+	}
+	
+	.logo {
+		height: 40upx;
+		width: 40upx;
+	}
+	
+	.tui-flex {
+		display: flex;
+		align-items: center;
+	}
+	
+	.tui-msg-box {
+		display: flex;
+		align-items: center;
+	}
+	
+	.tui-msg-pic {
+		width: 100upx;
+		height: 100upx;
+		border-radius: 50%;
+		display: block;
+		margin-right: 24upx;
+	}
+	
+	.tui-msg-item {
+		max-width: 500upx;
+		min-height: 80upx;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+	
+	.tui-msg-name {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		font-size: 34upx;
+		line-height: 1;
+		color: #262b3a;
+	}
+	
+	.tui-msg-content {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		font-size: 26upx;
+		line-height: 1;
+		color: #9397a4;
+	}
+	
+	.tui-msg-right {
+		max-width: 120upx;
+		height: 88upx;
+		margin-left: auto;
+		text-align: right;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+	
+	.tui-msg-right.tui-right-dot {
+		height: 76upx;
+		padding-bottom: 10upx;
+	
+	}
+	
+	.tui-msg-time {
+		width: 100%;
+		font-size: 24upx;
+		line-height: 24upx;
+		color: #9397a4;
+	}
+	
+	.tui-badge {
+		width: auto
+	}
+	
+	.tui-msg::after {
+		left: 154upx !important
 	}
 </style>

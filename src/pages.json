@@ -25,15 +25,33 @@
 			}
         }
         ,{
-            "path" : "pages/order/order",
-            "style" : {
-				"navigationBarTitleText": "订单列表"
-			}
-        }
-        ,{
             "path" : "pages/my/my",
             "style" : {
 				"navigationBarTitleText": "我的"
+			}
+        }
+        ,{
+            "path" : "pages/register/register",
+            "style" : {
+				"navigationBarTitleText": "注册"
+			}
+        }
+        ,{
+            "path" : "pages/pedestrians/list/list",
+            "style" : {
+				"navigationBarTitleText": "出行人信息"
+			}
+        }
+        ,{
+            "path" : "pages/userDetails/userDetails",
+            "style" : {
+				"navigationBarTitleText": "渠道商信息"
+			}
+        }
+        ,{
+            "path" : "pages/order/orderList/orderList",
+            "style" : {
+				"navigationBarTitleText": "订单列表"
 			}
         }
     ],
@@ -62,7 +80,7 @@
 			"text": "产品"
 		},
 		{
-			"pagePath": "pages/order/order",
+			"pagePath": "pages/order/orderList/orderList",
 			"iconPath": "static/index/order.png",
 			"selectedIconPath": "static/index/select_orader.png",
 			"text": "订单"

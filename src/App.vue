@@ -14,4 +14,6 @@
 
 <style>
 	/*每个页面公共css */
+	/*每个页面公共css */
+	@import "../common/app.css";
 </style>
