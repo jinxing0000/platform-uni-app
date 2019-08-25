@@ -51,7 +51,13 @@
         ,{
             "path" : "pages/order/orderList/orderList",
             "style" : {
-				"navigationBarTitleText": "订单列表"
+				"navigationBarTitleText": "我的订单"
+			}
+        }
+        ,{
+            "path" : "pages/order/orderDetails/orderDetails",
+            "style" : {
+				"navigationBarTitleText": "订单详情"
 			}
         }
     ],

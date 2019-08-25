@@ -1029,7 +1029,7 @@
 	.share{
 		height: 49px;
 		background-color: #FFFFFF;
-		line-height: 28px;
+		line-height: 20px;
 		background-color:transparent;
 		border:none
 	}

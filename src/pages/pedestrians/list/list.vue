@@ -11,7 +11,7 @@
 						<image :src="'../../../static/pedestrians/'+item.img" class="item-img"></image>
 						<view class="item-box">
 							<view class="item-title">{{item.title}}</view>
-							<view class="item-time">13333445566</view>
+							<view class="item-time">手机号：13333445566身份证号：142401199312134233</view>
 						</view>
 					</view>
 				</template>

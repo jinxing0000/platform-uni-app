@@ -1,237 +1,787 @@
 <template>
-	<view class="container">
-		<scroll-view scroll-x scroll-with-animation class="tab-view" :scroll-left="scrollLeft">
-			<view v-for="(item,index) in tabbar" :key="index" class="tab-bar-item" :class="[currentTab==index ? 'active' : '']"
-			 :data-current="index" @tap.stop="swichNav">
-				<text class="tab-bar-title">{{item}}</text>
-			</view>
-		</scroll-view>
-		<swiper class="tab-content" :current="currentTab" duration="300" @change="switchTab" :style="{height:winHeight+'px'}">
-			<swiper-item v-for="(item,index) in tabbar" :key="index">
-				<scroll-view scroll-y class="scoll-y">
-					<view class="list-view">
-					    {{content}}
-					</view>
-				</scroll-view>
-			</swiper-item>
-		</swiper>
-
-	</view>
+	<section class="aui-flexView">
+		<!-- <header class="aui-navBar aui-navBar-fixed">
+			<a href="javascript:;" class="aui-navBar-item">
+				<i class="icon icon-return"></i>
+			</a>
+			<div class="aui-center">
+				<span class="aui-center-title">我的订单</span>
+			</div>
+			<a href="javascript:;" class="aui-navBar-item">
+				<i class="icon icon-sys"></i>
+			</a>
+		</header> -->
+		<section class="aui-scrollView">
+			<div class="aui-tab" data-ydui-tab>
+				<ul class="tab-nav">
+					<block v-for="(menuTab,index) in menuTabs" :key="index">
+						<li v-bind:id="'tabNum'+index" @click="swichMenu(index)" :class="[currentTab==index ? 'tab-nav-item tab-active' : 'tab-nav-item']">
+							{{menuTab.name}}
+						</li>
+					</block>
+				</ul>
+				<div class="divHeight"></div>
+				<div class="tab-panel">
+					<block v-for="(menuList,index2) in menuLists" :key="index2" >
+						<div :class="[currentTab==index2 ? 'tab-panel-item tab-active' : 'tab-panel-item']">
+							<block v-for="(menuList2,index3) in menuList" :key="index3">
+								<div class="tab-item">
+									<a href="javascript:void(0);" class="aui-well-item aui-well-item-clear">
+										<div class="aui-well-item-hd">
+											<img :src="menuList2.logoimg" alt="">
+										</div>
+										<div class="aui-well-item-bd">
+											<h3>{{menuList2.dname}}</h3>
+										</div>
+										<span class="aui-well-item-fr">{{menuList2.zt}}</span>
+									</a>
+									<div class="aui-mail-product" @click="goOrderDetailsPage">
+										<a href="javascript:;" class="aui-mail-product-item">
+											<div class="aui-mail-product-item-hd">
+												<img :src="menuList2.img" alt="">
+											</div>
+											<div class="aui-mail-product-item-bd">
+												<p>{{menuList2.name}}</p>
+											</div>
+										</a>
+									</div>
+									<a href="javascript:;" class="aui-mail-payment">
+										<p>
+											共{{menuList2.sum}}件商品 实付款: ￥{{menuList2.pri}}
+										</p>
+									</a>
+									<div class="aui-mail-button">
+										<a href="javascript:;" :class="[menuList2.but_ddshouhuo==0 ? 'hd' : menuList2.but_ddshouhuo==2 ? '' :'aui-df-color']">等待收货</a>
+										<a href="javascript:;" :class="[menuList2.but_wuliu==0 ? 'hd' : menuList2.but_wuliu==2 ? '' :'aui-df-color']">查看物流</a>
+										<a href="javascript:;" :class="[menuList2.but_rebuy==0 ? 'hd' : menuList2.but_rebuy==2 ? '' :'aui-df-color']">再次购买</a>
+										<a href="javascript:;" :class="[menuList2.but_pingjia==0 ? 'hd' : menuList2.but_pingjia==2 ? '' :'aui-df-color']">评价晒单</a>
+										<a href="javascript:;" :class="[menuList2.but_fapiao==0 ? 'hd' : menuList2.but_fapiao==2 ? '' :'aui-df-color']">查看发票</a>
+										<a href="javascript:;" :class="[menuList2.but_zhifu==0 ? 'hd' : menuList2.but_zhifu==2 ? '' :'aui-df-color']">去支付</a>
+									</div>
+								</div>
+								<div :class="[index3+1==menuList.length ? 'hd':'divHeight']"></div>
+							</block>
+						</div>
+					</block>
+				</div>
+			</div>
+		</section>
+	</section>
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
-				tabbar: ["全部", "未处理", "待出行", "已完成"],
-				winHeight: "", //窗口高度
-				currentTab: 0, //预设当前项的值
-				scrollLeft: 0, //tab标题的滚动条位置
-				orderList:[
+				scrollLeft: 0,
+				isClickChange: false,
+				currentTab: 0,
+				menuTabs: [
 					{
-						id:"111"
-					}
+						name: '全部'
+					}, {
+						name: '待处理'
+					}, {
+						name: '待出行'
+					}, {
+						name: '已完成'
+					}, {
+						name: '已取消'
+					},
 				],
-				content:"123"
+				menuLists: [
+					[
+						{
+							"logoimg": 'https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg',
+							"dname":"自营Apple产品专营店",
+							"zt":"已取消",
+							"img": 'https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg',
+							"name":"利物浦官方 独家出品纪念版沙发",
+							"sum":"1",
+							"pri":"6899.00",
+							// 0=没有,1=有,2=标红
+							"but_rebuy":2,
+							"but_pingjia":1,
+							"but_fapiao":1,
+							"but_zhifu":0,
+							"but_wuliu":0,
+							"but_ddshouhuo":0,
+						},
+						{
+							"logoimg": '../../static/icon-logo.png',
+							"dname":"自营Apple产品专营店",
+							"zt":"已取消",
+							"img": '../../static/pd-002.png',
+							"name":"Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机",
+							"sum":"1",
+							"pri":"3899.00",
+							"but_rebuy":2,
+							"but_pingjia":0,
+							"but_fapiao":0,
+							"but_zhifu":0,
+							"but_wuliu":0,
+							"but_ddshouhuo":0,
+						},
+						{
+							"logoimg": '../../static/icon-logo.png',
+							"dname":"自营Apple产品专营店",
+							"zt":"已取消",
+							"img": '../../static/pd-003.png',
+							"name":"Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机",
+							"sum":"1",
+							"pri":"4899.00",
+							"but_rebuy":2,
+							"but_pingjia":1,
+							"but_fapiao":0,
+							"but_zhifu":0,
+							"but_wuliu":0,
+							"but_ddshouhuo":0,
+						},
+					],
+					[
+						{
+							"logoimg": '../../static/icon-logo.png',
+							"dname":"SONY京东自营官方旗舰店",
+							"zt":"等待付款",
+							"img": '../../static/pd-002.png',
+							"name":"索尼（SONY）WH-1000XM2 Hi-Res无线蓝牙耳机 智能降噪耳机 头戴式 1000x二代 香槟金",
+							"sum":"1",
+							"pri":"2899.00",
+							"but_rebuy":0,
+							"but_pingjia":0,
+							"but_fapiao":0,
+							"but_zhifu":2,
+							"but_wuliu":0,
+							"but_ddshouhuo":0,
+						}
+					],
+					[
+						{
+							"logoimg": '../../static/icon-logo.png',
+							"dname":"自营FILA产品专营店",
+							"zt":"等待收货",
+							"img": '../../static/pd-003.png',
+							"name":"FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41",
+							"sum":"1",
+							"pri":"5899.00",
+							"but_ddshouhuo":2,
+							"but_rebuy":1,
+							"but_pingjia":0,
+							"but_fapiao":0,
+							"but_zhifu":0,
+							"but_wuliu":1,
+						}
+					],
+					[
+						{
+							"logoimg": '../../static/icon-logo.png',
+							"dname":"自营零食产品专营店",
+							"zt":"已完成",
+							"img": '../../static/pd-004.png',
+							"name":"盼盼 酸梅汤 酸梅汁风味饮料 250ml*24盒 整箱 果汁饮料",
+							"sum":"1",
+							"pri":"21.00",
+							"but_rebuy":2,
+							"but_pingjia":1,
+							"but_fapiao":1,
+							"but_zhifu":0,
+							"but_wuliu":0,
+							"but_ddshouhuo":0,
+						}
+					],
+					[
+						{
+							"logoimg": '../../static/icon-logo.png',
+							"dname":"自营OPPO产品专营店",
+							"zt":"已取消",
+							"img": '../../static/pd-005.png',
+							"name":"OPPO R15 全面屏双摄拍照手机 4G+128G 雪盈白 全网通 移动联通电信4G 双卡双待手机",
+							"sum":"1",
+							"pri":"21.00",
+							"but_rebuy":2,
+							"but_pingjia":1,
+							"but_fapiao":1,
+							"but_zhifu":0,
+							"but_wuliu":0,
+							"but_ddshouhuo":0,
+						}
+					],
+				]
 			}
 		},
-		onLoad: function() {
-			let that = this;
-			//  高度自适应
-			uni.getSystemInfo({
-				success: function(res) {
-					let calc = res.windowHeight;
-					that.winHeight = calc;
-				}
-			});
+		onLoad() {
+			// for (var i = 0; i < this.menuLists.length; i++) {
+			// 	this.getDateList(i);
+			// }
 		},
 		methods: {
-			// 滚动切换标签样式
-			switchTab: function(e) {
-				let that = this;
-				this.currentTab = e.detail.current;
-				this.checkCor();
-			},
-			// 点击标题切换当前页时改变样式
-			swichNav: function(e) {
-				let cur = e.currentTarget.dataset.current;
-				if (this.currentTab == cur) {
+			swichMenu: async function(current) { //点击其中一个选项
+				if (this.currentTab == current) {
 					return false;
 				} else {
-					this.currentTab = cur
-				}
-				this.content="456";
-			},
-			//判断当前滚动超过一屏时，设置tab标题滚动条。
-			checkCor: function() {
-				if (this.currentTab > 3) {
-					//这里距离按实际计算
-					this.scrollLeft = 300
-				} else {
-					this.scrollLeft = 0
+					this.currentTab = current;
+					this.setScrollLeft(current);
 				}
 			},
+			swiperChange: async function(e) {
+				let index = e.target.current;
+				this.setScrollLeft(index);
+				this.currentTab = index;
+			},
+			setScrollLeft: async function(tabIndex) {
+				let leftWidthSum = 0;
+				for (var i = 0; i <= tabIndex; i++) {
+					let nowElement = await this.getWidth('tabNum' + i);
+					leftWidthSum = leftWidthSum + nowElement.width;
+				}
+				let winWidth = uni.getSystemInfoSync().windowWidth;
+				this.scrollLeft = leftWidthSum > winWidth ? (leftWidthSum - winWidth) : 0
+			},
+			getWidth: function(id) { //得到元素的宽高
+				return new Promise((res, rej) => {
+					uni.createSelectorQuery().select("#" + id).fields({
+						size: true,
+						scrollOffset: true
+					}, (data) => {
+						res(data);
+					}).exec();
+				})
+			},
+			getDateList: function(tabIndex) {
+				// var entity = this.menuTabs[tabIndex].name;
+				// this.menuLists[tabIndex].push(entity);
+			},
+			goOrderDetailsPage:function(){
+				uni.navigateTo({
+					url: '/pages/order/orderDetails/orderDetails'
+				});
+			}
 		}
 	}
 </script>
 
 <style>
-	/*tabbar start*/
-	::-webkit-scrollbar {
-		width: 0;
-		height: 0;
-		color: transparent;
+	/* 公共样式表css */
+	html,body {
+	    color: #333;
+	    margin: 0;
+	    height: 100%;
+	    font-family: "Myriad Set Pro","Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
+	    -webkit-font-smoothing: antialiased;
+	    -moz-osx-font-smoothing: grayscale;
+	    font-weight: normal;
 	}
-
-	.tab-view::before {
-		content: '';
-		position: absolute;
-		border-bottom: 1upx solid #eaeef1;
-		-webkit-transform: scaleY(0.5);
-		transform: scaleY(0.5);
-		bottom: 0;
-		right: 0;
-		left: 0;
+	
+	* {
+	    -webkit-box-sizing: border-box;
+	    -moz-box-sizing: border-box;
+	    box-sizing: border-box;
 	}
-
-	.tab-view {
+	
+	a {
+	    text-decoration: none;
+	    color: #000;
+	}
+	
+	a, label, button, input, select {
+	    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	}
+	
+	img {
+	    border: 0;
+	}
+	
+	body {
+	    background: #fff;
+	    color: #666;
+	}
+	
+	html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+	    margin: 0;
+	    padding: 0;
+	}
+	
+	a {
+	    text-decoration: none;
+	    color: #08acee;
+	}
+	
+	button {
+	    outline: 0;
+	}
+	
+	img {
+	    border: 0;
+	}
+	
+	button,input,optgroup,select,textarea {
+	    margin: 0;
+	    font: inherit;
+	    color: inherit;
+	    outline: none;
+	}
+	
+	li {
+	    list-style: none;
+	}
+	
+	a {
+	    color: #666;
+	}
+	
+	.clearfix::after {
+	    clear: both;
+	    content: ".";
+	    display: block;
+	    height: 0;
+	    visibility: hidden;
+	}
+	
+	.clearfix {
+	}
+	
+	/* 必要布局样式css */
+	.aui-flexView {
+	    width: 100%;
+	    height: 100%;
+	    margin: 0 auto;
+	    display: -webkit-box;
+	    display: -webkit-flex;
+	    display: -ms-flexbox;
+	    display: flex;
+	    -webkit-box-orient: vertical;
+	    -webkit-box-direction: normal;
+	    -webkit-flex-direction: column;
+	    -ms-flex-direction: column;
+	    flex-direction: column;
+	}
+	
+	.aui-scrollView {
+	    width: 100%;
+	    height: 100%;
+	    -webkit-box-flex: 1;
+	    -webkit-flex: 1;
+	    -ms-flex: 1;
+	    flex: 1;
+	    overflow-y: auto;
+	    overflow-x: hidden;
+	    -webkit-overflow-scrolling: touch;
+	    position: relative;
+	    /* margin-top: -44px; */
+	}
+	
+	.aui-navBar {
+	    height: 44px;
+	    position: relative;
+	    display: -webkit-box;
+	    display: -webkit-flex;
+	    display: -ms-flexbox;
+	    display: flex;
+	    z-index: 1002;
+	    background: #ffffff;
+	}
+	
+	.aui-navBar:after {
+	    content: '';
+	    position: absolute;
+	    z-index: 2;
+	    bottom: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 1px;
+	    border-bottom: 1px solid #ffffff;
+	    -webkit-transform: scaleY(0.5);
+	    transform: scaleY(0.5);
+	    -webkit-transform-origin: 0 100%;
+	    transform-origin: 0 100%;
+	}
+	
+	.aui-navBar-item {
+	    height: 44px;
+	    min-width: 25%;
+	    -webkit-box-flex: 0;
+	    -webkit-flex: 0 0 25%;
+	    -ms-flex: 0 0 25%;
+	    flex: 0 0 25%;
+	    padding: 0 0.9rem;
+	    display: -webkit-box;
+	    display: -webkit-flex;
+	    display: -ms-flexbox;
+	    display: flex;
+	    -webkit-box-align: center;
+	    -webkit-align-items: center;
+	    -ms-flex-align: center;
+	    align-items: center;
+	    font-size: 0.7rem;
+	    white-space: nowrap;
+	    overflow: hidden;
+	    color: #a0a0a0;
+	    position: relative;
+	}
+	
+	.aui-navBar-item:first-child {
+	    -webkit-box-ordinal-group: 2;
+	    -webkit-order: 1;
+	    -ms-flex-order: 1;
+	    order: 1;
+	    margin-right: -25%;
+	    font-size: 0.9rem;
+	    font-weight: bold;
+	}
+	
+	.aui-navBar-item:last-child {
+	    -webkit-box-ordinal-group: 4;
+	    -webkit-order: 3;
+	    -ms-flex-order: 3;
+	    order: 3;
+	    -webkit-box-pack: end;
+	    -webkit-justify-content: flex-end;
+	    -ms-flex-pack: end;
+	    justify-content: flex-end;
+	}
+	
+	.aui-center {
+	    -webkit-box-ordinal-group: 3;
+	    -webkit-order: 2;
+	    -ms-flex-order: 2;
+	    order: 2;
+	    display: -webkit-box;
+	    display: -webkit-flex;
+	    display: -ms-flexbox;
+	    display: flex;
+	    -webkit-box-pack: center;
+	    -webkit-justify-content: center;
+	    -ms-flex-pack: center;
+	    justify-content: center;
+	    -webkit-box-align: center;
+	    -webkit-align-items: center;
+	    -ms-flex-align: center;
+	    align-items: center;
+	    height: 44px;
+	    width: 50%;
+	    margin-left: 25%;
+	}
+	
+	.aui-center-title {
+	    text-align: center;
+	    width: 100%;
+	    white-space: nowrap;
+	    overflow: hidden;
+	    display: block;
+	    text-overflow: ellipsis;
+	    font-size: 0.95rem;
+	    color: #3c3c3c;
+	}
+	
+	.icon {
+	    width: 20px;
+	    height: 20px;
+	    display: block;
+	    border: none;
+	    float: left;
+	    background-size: 20px;
+	    background-repeat: no-repeat;
+	}
+	
+	.icon-return {
+	    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAACh0lEQVRoQ+3ZMW8TMRQH8PcOsTBQISExVCIRCwgWFvZ+hZYBpIrEcTYkBsTGlI2VDamL3YEBpWJoR1BJaOlXYEzyDYp0bMRGRjnJoDuWs/1e3EbKeHf55b33vzsb4YJ98IJ54RKce8XZV1gIcQ8AviDiD2vtC631pzZFYQ2WUt611p4CwM0VcqqU2soSXIN1ztdKqTfZgRuw75RSz9tg3bHsWjomlh04NpYVOAWWDbjf7z8oimLipbH7bUopJdvO7L/Hk8+wwyLiCSLe8H6cww4BwGYFTo0lbWkKLBmYCksCrsNaa99rrZ/FmFnS0GrCdrvd3mg0MqEDqu58yVKaAzZZSwshHgLAsX/rcW2csrJVtaNXeIWdIuL16qJU2OgVrsMCwEGn03mSamaThVYTtizLp+PxeJkioJKFFldslJbmjA0O5o4NCm7AHpZluUM5s1FCSwjxCAA++7ceADiczWaPJ5PJL6qAihJaUspdY8w+Il7xLsASG6SlhRA/EfGa91BxNJ/Pd7hVNtiT1mAwOAeADXdCa637Hi0Wi3zBUsptY8wHRLzqwIh/nlbzbWmna0roLEOrmo11QQd9W1oHdFDwOrR3cLCH/uuFn0uQRQE7dMPKJHl6RwNzRUcF/w9N9VIRHVyhazbLDihWP5KAHbphOzQ5OhmYCzopmAM6OZgaTQL20FMAuOUtHESfaTLwCn3HWnuWEk0KpkCTg1OjWYArtDHmKyJu+jMdeh+KDdghh8NhZ7lcfvPRoXcaWYFToNmBY6NZgj20m+nb3pr3W631yzY7GWzBDtXr9TaLojjz0N+VUvezBXvoPQBw0Fda649Zg9vg6o5l3dKhse58l+AY/yqnc/4GvNDoTFOq8FwAAAAASUVORK5CYII=");
+	}
+	
+	.icon-sys {
+	    background-image: url("data:image/png;base64,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");
+	}
+	
+	.tab-nav {
+	    background: #FFFFFF;
+	    height: 40px;
+	    line-height: 40px;
+	    /* border-radius: 80px; */
+	    display: block;
+	    /* margin: 0 auto; */
+	    position: fixed;
 		width: 100%;
-		height: 100upx;
-		overflow: hidden;
-		box-sizing: border-box;
-		position: fixed;
-		top: 0;
-		/* #ifdef H5 */
-		top: 44px;
-		/* #endif */
-		left: 0;
-		z-index: 99;
-		background: #fff;
-		white-space: nowrap;
+		margin-bottom: 15%;
+	    /* width: 185px; */
+		z-index: 9999;
 	}
-
-	.tab-bar-item {
-		padding: 0;
-		height: 100upx;
-		min-width: 80upx;
-		line-height: 100upx;
-		margin: 0 28upx;
-		display: inline-block;
-		text-align: center;
-		box-sizing: border-box;
+	
+	.tab-nav:after {
+	    content: '';
+	    position: fixed;
+	    z-index: 2;
+	    bottom: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 1px;
+	    border-bottom: 1px solid #bbbbbb;
+	    -webkit-transform: scaleY(0.5);
+	    transform: scaleY(0.5);
+	    -webkit-transform-origin: 0 100%;
+	    transform-origin: 0 100%;
 	}
-
-	.tab-bar-title {
-		height: 100upx;
-		line-height: 100upx;
-		font-size: 32upx;
-		color: #999;
-		font-weight: 400;
+	
+	.tab-nav-item {
+	    height: 40px;
+	    line-height: 40px;
+	    position: relative;
+	    text-align: center;
+	    color: #585858;
+	    font-size: 0.9rem;
+	    display: block;
+	    float: left;
+	    border-radius: 80px;
+	    /* padding: 0 15px; */
+	    width: 20%;
+	    margin: 0 auto;
 	}
-
-	.active {
-		border-bottom: 6upx solid #5677fc;
+	
+	.tab-nav-item.tab-active {
+	    /* background-color: #51bd03; */
 	}
-
-	.active .tab-bar-title {
-		color: #5677fc !important;
-		font-size: 36upx;
-		font-weight: bold;
+	
+	.tab-nav-item.tab-active a {
+	    color: #000000;
+	    font-weight: bold;
 	}
-
-	/*tabbar end*/
-	.scoll-y {
-		height: 100%;
+	
+	.tab-nav-item a {
+	    display: inherit;
+	    color: inherit;
+	    font-size: 0.8rem;
+	    color: #464646;
 	}
-
-	.list-view {
-		margin-top: 100upx;
-		width: 100%;
-		background: #fff;
-		box-sizing: border-box;
-		padding-bottom: env(safe-area-inset-bottom);
+	
+	.tab-panel {
+	    position: relative;
+	    overflow: hidden;
 	}
-
-	.list-cell {
-		padding: 30upx;
-		box-sizing: border-box;
+	
+	.tab-panel .tab-panel-item {
+	    width: 100%;
+	    position: absolute;
+	    top: 0;
+	    -webkit-transform: translateX(-100%);
+	    transform: translateX(-100%);
 	}
-
-	.cell-title-box {
-		display: flex;
-		justify-content: space-between;
+	
+	.tab-nav-item.tab-active:before {
+	    content: '';
+	    width: 40%;
+	    height: 0px;
+	    position: absolute;
+	    left: 50%;
+	    bottom: 0;
+	    margin-left: -20%;
+	    z-index: 4;
+	    background-color: #1296db;
+	    border-radius: 120px;
+	    border: 1px solid #1296db;
 	}
-
-	.cell-title {
-		font-size: 36upx;
-		line-height: 56upx;
-		word-break: break-all;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-		/* padding-bottom: 30upx; */
+	
+	.tab-panel .tab-panel-item.tab-active ~ .tab-panel-item {
+	    -webkit-transform: translateX(100%);
+	    transform: translateX(100%);
 	}
-
-	.img-container {
-		width: 100%;
-		padding-top: 24upx;
-		display: flex;
-		height: 160upx;
-		justify-content: space-between;
+	
+	.tab-panel .tab-panel-item.tab-active {
+	    position: relative;
+	    -webkit-transition: -webkit-transform .15s;
+	    transition: -webkit-transform .15s;
+	    transition: transform .15s;
+	    transition: transform .15s, -webkit-transform .15s;
+	    -webkit-transform: translateX(0);
+	    transform: translateX(0);
 	}
-
-	.cell-img {
-		width: 32%;
-		overflow: hidden;
-		position: relative;
+	
+	.divHeight {
+	    background: #f0f2f5;
+	    width: 100%;
+	    height: 10px;
+		padding-top: 20px;
 	}
-
-	.img {
-		width: 100%;
-		height: 160upx;
-		display: block;
-		/* position: absolute;
-		  left: 50%;
-		  top:50%;
-		  transform: translate(-50%,-50%);
-		*/
-		border-radius: 4upx;
+	
+	.aui-well-item {
+	    padding: 20px 15px 20px 20px;
+	    position: relative;
+	    display: -webkit-box;
+	    display: -webkit-flex;
+	    display: flex;
+	    -webkit-box-align: center;
+	    -webkit-align-items: center;
+	    align-items: center;
 	}
-
-	.sub-title {
-		padding-top: 24upx;
-		font-size: 28upx;
-		color: #BCBCBC;
-		display: flex;
-		align-items: center
+	
+	.aui-well-item-hd {
+	    margin-right: .4em;
+	    width: 19px;
+	    height: 19px;
+	    line-height: 19px;
+	    text-align: center;
 	}
-
-	.badge {
-		padding: 5upx 10upx;
-		font-size: 24upx;
-		border-radius: 4upx;
-		margin-right: 20upx;
+	
+	.aui-well-item-hd img {
+	    width: 100%;
+	    max-height: 100%;
+	    vertical-align: top;
+	    display: block;
+	    border: none;
+	    margin-top: 3px;
 	}
-
-	.b-red {
-		background: #FCEBEF;
-		color: #8A5966;
+	
+	.aui-well-item-bd {
+	    -webkit-box-flex: 1;
+	    -webkit-flex: 1;
+	    flex: 1;
+	    min-width: 0;
 	}
-
-	.b-blue {
-		background: #ECF6FD;
-		color: #4DABEB;
+	
+	.aui-well-item-bd h3 {
+	    color: #333;
+	    font-size: 0.9rem;
+	    position: relative;
+	    /* padding-left: 20px; */
+	    font-weight: normal;
+	    padding-bottom: 0;
+	    text-align: left;
 	}
-
-	.b-orange {
-		background: #FEF5EB;
-		color: #FAA851
+	
+	.aui-well-item-fr {
+	    font-size: 0.85rem;
+	    text-align: right;
+	    color: #999999;
+	    padding-right: 25px;
+	    position: relative;
 	}
-
-	.b-green {
-		background: #E8F6E8;
-		color: #44CF85
+	
+	.aui-well-item-fr:after {
+	    content: " ";
+	    display: inline-block;
+	    height: 18px;
+	    width: 18px;
+	    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAEQ0lEQVRYR+3YbYgVVRgH8Oc/3VX7sLK9sRVpWyCYCiEYvVCylh9cKlx2vefMtiCGUR8KjAyUiloSesMQDEJWsBTTc55h3RJqkcpeJArDEMTdCqEsgwqslDZQd+cfM11lsd17585OYOB8usw5z/P8Zs45M+cO5AI/cIH75CJwsiNU9x201i6HyGIRmSFk1XiKxACOUeQD7/22PNh6gAiNeUuArjyFhNzuVJeLCOuJzww0xqwOgPVJcpIEcEDI4VrFKDIHwFVJv5h8UlVfrRUztj0z0BpzGMAcERkejePboyg6lKVQa2trqbm5eRNEVpIc9Kpzs8Sd7ZMZGFp7dmj2Oe8X1lOkq1y+m0HwYRLjvM9cM+n/r85jIPUYJt13Ivj/EGhMD4GZEHkwXRAi20B+N+lbNCYBRRYBWJguNpHn06FX7RmvxrjzIQzDBUJ+WVl596rqe0UCrTHrAawm+adXbayWe1xgV2fnbJZKQxWgVVUtGLgJwCMkf/aq19QN7OjouG5KQ8OPaSC50qluKRRo7XaIdJM84lVn1Q1sb29vmjZ16u8V4CqnurFg4NsQWUryoFedXzewp6cn+HpoaLQyxE+p6ovJ7zAMWyWOW8+f1GEYtkgcr0gLBcGbzrnvK/3HPW+NeR/AYpKfedU76wYmAdaYUwCmCPmCU306LWhMjwDPnf/ATeHkR2khYJFz7uNzFzTOeWvM5wBuI7nHqy7JCzwO4HIhNzrVVYUCrT0EkXkk+7zqsrzAowBmCrnFqa4sEhhamzxXW4Tc6lT/mRoTHBO+F621gxC5SUS88z4sEmiN+TXZ4ZB83as+mg9ozH4Atwj5rlO9r2DgXwAuJfmKV12TF7gXwCIhP3Gq6cotYpGMfUII+axTXZcXuBvA/UIecKoLigJ2d3dPHx0ZOZGiyCec6oZcwNCYHcn2nuQ3XnV2UcAwDK8V8qcK8GGnujkX0Fq7GSIPCXnMqc4oCvhAZ+esuFT6NkXFcbeLoh35gMZsAPA4yT+86mVFAcPOzvlSKn1VAS51UbQ7FzA0Zp0AzyTX6by/pDBgGN4l5KdJPsTxPTujaG9e4BoBXkqCT5w8OW1gYOBUEavYWtsGkXR/ORrHt0ZRtD8X0Fr7GEReqyS6Ioqi36olytoWlsvLJAii9A6OjMzb2dd3OBcwLJdXSBC8UQFeH0XRD1kR1fqNzRucOdOyY9euo3mB5650NI7nRlE0WARw7MicOn36yv7+/uO5gF3l8hIGwUDWuZIVb61dC5F0f3l2bucCWmtvhsjBdK6QK3aqbs2KqDrE1ibTJtnB/OK8v7pWzgl3M8k7c2hw8AiAG5J/XxA5UCtZrXaKlETkDgAQ8mWnurZWTNXPENbaeRB5R0RurJWornayf3pTk+3t7T1TK67md5K2trapjY2NbQDmgmyolbBaO4FhAF845/ZlzVMTmDXRf9XvInCyd/ZvI9y6Rxr69GgAAAAASUVORK5CYII=");
+	    background-size: 18px;
+	    top: -2px;
+	    position: absolute;
+	    top: 50%;
+	    margin-top: -9px;
+	    right: 0px;
+	    border-radius: 2px;
+	}
+	
+	.aui-mail-product {
+	    background: #f7f7f7;
+	    padding: 20px;
+	    position: relative;
+	    overflow: hidden;
+	}
+	
+	.aui-mail-product-item {
+	    /* padding: 15px; */
+	    position: relative;
+	    display: -webkit-box;
+	    display: -webkit-flex;
+	    display: flex;
+	    -webkit-box-align: center;
+	    -webkit-align-items: center;
+	    align-items: center;
+	}
+	
+	.aui-mail-product-item-hd {
+	    margin-right: .8em;
+	    width: 70px;
+	    height: 70px;
+	    line-height: 70px;
+	    text-align: center;
+	}
+	
+	.aui-mail-product-item-hd img {
+	    width: 100%;
+	    max-height: 100%;
+	    vertical-align: top;
+	}
+	
+	.aui-mail-product-item-bd {
+	    -webkit-box-flex: 1;
+	    -webkit-flex: 1;
+	    flex: 1;
+	    min-width: 0;
+	}
+	
+	.aui-mail-product-item-bd p {
+	    color: #404040;
+	    font-size: 13px;
+	    line-height: 1.4;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    display: -webkit-box;
+	    -webkit-box-orient: vertical;
+	    -webkit-line-clamp: 3;
+	}
+	
+	.aui-mail-payment {
+	    padding: 10px 15px;
+	    position: relative;
+	    text-align: right;
+	    font-size: 0.8rem;
+	    color: #333;
+	    overflow: hidden;
+	    display: block;
+	}
+	
+	.aui-mail-payment p em {
+	    font-style: normal;
+	}
+	
+	.aui-mail-payment p i {
+	    font-size: 1.3rem;
+	    font-style: normal;
+	}
+	
+	.aui-mail-payment:after {
+	    content: '';
+	    position: absolute;
+	    z-index: 2;
+	    bottom: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 1px;
+	    border-bottom: 1px solid #e2e2e2;
+	    -webkit-transform: scaleY(0.5);
+	    transform: scaleY(0.5);
+	    -webkit-transform-origin: 0 100%;
+	    transform-origin: 0 100%;
+	}
+	
+	.aui-mail-button {
+	    padding: 15px 20px 15px 0;
+	    overflow: hidden;
+	}
+	
+	.aui-mail-button a {
+	    background: none;
+	    border: 1px solid #f0250f;
+	    color: #f0250f;
+	    font-size: 0.8rem;
+	    border-radius: 40px;
+	    /* display: block; */
+	    padding: 2px 14px;
+	    /* display: inline-block; */
+	    float: right;
+	    margin-left: 8px;
+	}
+	
+	.aui-mail-button .aui-df-color {
+	    color: #333;
+	    border: 1px solid #ddd;
+	}
+	
+	.aui-well-wait {
+	    text-align: right;
+	    color: #f0250f;
+	    font-size: 0.8rem;
+	}
+	
+	.hd{
+		display: none;
 	}
 </style>
