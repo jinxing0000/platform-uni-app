@@ -60,6 +60,12 @@
 				"navigationBarTitleText": "订单详情"
 			}
         }
+        ,{
+            "path" : "pages/order/orderSubmit/orderSubmit",
+            "style" : {
+				"navigationBarTitleText": "提交订单"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

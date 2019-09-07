@@ -208,7 +208,7 @@
 					<tui-button type="danger" shape="circle" size="mini" @click="showPopup">加入购物车</tui-button>
 				</view> -->
 				<view class="tui-flex-1">
-					<tui-button type="danger" shape="circle" size="mini" @click="showPopup">立即购买</tui-button>
+					<tui-button type="danger" shape="circle" size="mini" @click="goOrderSubmitPage">立即购买</tui-button>
 				</view>
 			</view>
 		</view>
@@ -298,6 +298,11 @@
 			cellPhone:function(){
 				uni.makePhoneCall({
 					phoneNumber: '18335461816' //仅为示例
+				});
+			},
+			goOrderSubmitPage:function(){
+				uni.navigateTo({
+					url: '/pages/order/orderSubmit/orderSubmit'
 				});
 			}
 		}
