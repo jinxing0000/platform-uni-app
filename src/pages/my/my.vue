@@ -110,7 +110,6 @@
 					}
 				});
 				data.then((v)=>{
-					console.log(v);
 					if(v){
 						my.isLogin=true;
 						my.avatarUrl=v.headPortraitUrl;

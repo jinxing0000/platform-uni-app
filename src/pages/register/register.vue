@@ -22,31 +22,31 @@
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">渠道商名称：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入渠道商名称" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="channelName" placeholder="请输入渠道商名称" maxlength="50" type="text" v-model="channelMerchantsInfo.channelName"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">联系人：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系人" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="contactsName" placeholder="请输入联系人" maxlength="50" type="text" v-model="channelMerchantsInfo.contactsName"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">身份证号：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入身份证号" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="cardNumber" placeholder="请输入身份证号" maxlength="50" type="text" v-model="channelMerchantsInfo.cardNumber"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">联系电话：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系电话" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="contactNumber" placeholder="请输入联系电话" maxlength="50" type="text" v-model="channelMerchantsInfo.contactNumber"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">微信号：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入微信号" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="wechatNumber" placeholder="请输入微信号" maxlength="50" type="text" v-model="channelMerchantsInfo.wechatNumber"/>
 					</view>
 				</tui-list-cell>
 				<view class="tui-btn-box">
@@ -61,6 +61,7 @@
 <script>
 	const form = require("../components/utils/formValidation.js")
 	import tuiListCell from "../components/list-cell/list-cell"
+	const request = require("../../../common/request.js")
 	export default {
 		components: {
 			tuiListCell
@@ -68,13 +69,14 @@
 		data() {
 			return {
 				avatarUrl:"../../static/my/mine_def_touxiang_3x.png",
-				nickName:""
+				nickName:"",
+				channelMerchantsInfo:{}
 			}
 		},
 		onShow: function() {
 			this.getWeiXinUserInfo();
-			 const openId = uni.getStorageSync('openId');
-			 console.log(openId);
+			const openId = uni.getStorageSync('openId');
+			this.channelMerchantsInfo.openId=openId;
 		},
 		methods: {
 			//获取微信用户信息
@@ -91,13 +93,47 @@
 								console.log(infoRes);
 								that._data.avatarUrl = infoRes.userInfo.avatarUrl;
 								that._data.nickName = infoRes.userInfo.nickName;
+								that._data.channelMerchantsInfo.headPortraitUrl = infoRes.userInfo.avatarUrl;
 							}
 						});
 					}
 				});
 			},
 			formSubmit: function(e) {
-				console.log("提交数据！！")
+				let mobile=this.channelMerchantsInfo.contactNumber;
+				let cardNumber=this.channelMerchantsInfo.cardNumber;
+				const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/
+				if(!mobileReg.test(mobile)){
+					uni.showToast({
+						title: "请输入有效的手机号！！",
+						icon: 'none',
+						duration: 2000
+					})
+					return;
+				}
+				const cardNUmberReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+				if(!cardNUmberReg.test(cardNumber)){
+					uni.showToast({
+						title: "请输入有效的身份证号！！",
+						icon: 'none',
+						duration: 2000
+					})
+					return;
+				}
+				let data=request.request('/app/base/channelMerchantsInfo/save',{
+					method:"POST",
+					data:this.channelMerchantsInfo
+				});
+				data.then((v)=>{
+					uni.showToast({
+						title: "注册成功！！",
+						icon: 'none',
+						duration: 2000
+					})
+					uni.switchTab({
+						url: '/pages/my/my'
+					});
+				});
 				//表单规则
 				// let rules = [{
 				// 	name: "name",
@@ -154,9 +190,9 @@
 				// 		icon: "none"
 				// 	});
 				// }
-				uni.switchTab({
-					url: '/pages/my/my'
-				});
+				// uni.switchTab({
+				// 	url: '/pages/my/my'
+				// });
 			},
 			formReset: function(e) {
 				uni.switchTab({

@@ -20,27 +20,27 @@
 			<tui-list-cell :arrow="true" last="true" class="tui-list">
 				<image src="../../static/userDetails/qdsmc.png" class="logo" mode="widthFix"></image>
 				<text class="tui-list-cell-name">渠道商名称</text>
-				<view class="tui-right">山西省盈科旅游分公司</view>
+				<view class="tui-right">{{channelMerchantsInfo.channelName}}</view>
 			</tui-list-cell>
 			<tui-list-cell :arrow="true" last="true" class="tui-list">
 				<image src="../../static/userDetails/lxrxx.png" class="logo" mode="widthFix"></image>
 				<text class="tui-list-cell-name">联系人</text>
-				<view class="tui-right">张三</view>
+				<view class="tui-right">{{channelMerchantsInfo.contactsName}}</view>
 			</tui-list-cell>
 			<tui-list-cell :arrow="true" last="true" class="tui-list">
 				<image src="../../static/userDetails/sfzh.png" class="logo" mode="widthFix"></image>
 				<text class="tui-list-cell-name">身份证号</text>
-				<view class="tui-right">142401199812123344</view>
+				<view class="tui-right">{{channelMerchantsInfo.cardNumber}}</view>
 			</tui-list-cell>
 			<tui-list-cell :arrow="true" last="true" class="tui-list">
 				<image src="../../static/userDetails/lxdd.png" class="logo" mode="widthFix"></image>
 				<text class="tui-list-cell-name">联系电话</text>
-				<view class="tui-right">13333445566</view>
+				<view class="tui-right">{{channelMerchantsInfo.contactNumber}}</view>
 			</tui-list-cell>
 			<tui-list-cell :arrow="true" last="true" class="tui-list">
 				<image src="../../static/userDetails/wxh.png" class="logo" mode="widthFix"></image>
 				<text class="tui-list-cell-name">微信号</text>
-				<view class="tui-right">13333445566</view>
+				<view class="tui-right">{{channelMerchantsInfo.wechatNumber}}</view>
 			</tui-list-cell>
 		</view>
 		
@@ -53,6 +53,7 @@
 	import tuiIcon from "../components/icon/icon"
 	import tuiTag from "../components/tag/tag"
 	import tuiBadge from "../components/badge/badge"
+	const request = require("../../../common/request.js")
 	export default {
 		components: {
 			tuiListView,
@@ -64,11 +65,32 @@
 		data() {
 			return {
 				avatarUrl:"../../static/my/mine_def_touxiang_3x.png",
-				nickName:"山西省盈科旅游分公司"
+				nickName:"",
+				channelMerchantsInfo:{}
 			}
 		},
+		onShow: function() {
+			const openId = uni.getStorageSync('openId');
+			this.getUserInfo(openId);
+		},
 		methods: {
-			
+			getUserInfo:function(id){
+				let my=this;
+				let data=request.request('/app/base/channelMerchantsInfo/info',{
+					method:"GET",
+					data:{
+						id:id
+					}
+				});
+				data.then((v)=>{
+					if(v){
+						my.isLogin=true;
+						my.avatarUrl=v.headPortraitUrl;
+						my.nickName=v.channelName;
+						my.channelMerchantsInfo=v;
+					}
+				});
+			},
 		}
 	}
 </script>
