@@ -73,6 +73,8 @@
 		},
 		onShow: function() {
 			this.getWeiXinUserInfo();
+			 const openId = uni.getStorageSync('openId');
+			 console.log(openId);
 		},
 		methods: {
 			//获取微信用户信息

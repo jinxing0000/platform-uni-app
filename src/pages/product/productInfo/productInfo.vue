@@ -5,7 +5,7 @@
 			<swiper :autoplay="true" :interval="5000" :duration="150" :circular="true" :style="{height:scrollH + 'px'}" @change="bannerChange">
 				<block v-for="(item,index) in banner" :key="index">
 					<swiper-item :data-index="index" @tap.stop="previewImage">
-						<image :src="item" class="tui-slide-image" :style="{height:scrollH+'px'}" />
+						<image :src="item.thumbUrl" class="tui-slide-image" :style="{height:scrollH+'px'}" />
 					</swiper-item>
 				</block>
 			</swiper>
@@ -18,14 +18,14 @@
 			<view class="tui-product-title tui-border-radius">
 				<view class="tui-pro-pricebox tui-padding">
 					<view class="tui-pro-price">
-						<view>￥<text class="tui-price">4999元</text></view>
+						<view>￥<text class="tui-price">{{productInfo.adultPrice}}元</text></view>
 						<!-- <tui-tag size="small" :plain="true" type="high-green" shape="circle">精品</tui-tag> -->
 						<!-- <tui-tag :plain="true" type="danger">精品路线</tui-tag> -->
 						<tui-tag shape="circleRight">精品路线</tui-tag>
 					</view>
 				</view>
 				<view class="tui-pro-titbox">
-					<view class="tui-pro-title">谈判官明星同款耳坠韩国气质简约显脸瘦的耳环女百搭个性长款耳钉 个性水滴耳环【A2】</view>
+					<view class="tui-pro-title">{{productInfo.productName}}</view>
 					<button open-type="share" class="tui-share-btn tui-share-position">
 						<tui-tag type="gray" tui-tag-class="tui-tag-share tui-size" shape="circleLeft" size="small">
 							<tui-icon name="share-fill" :size="22" color='#333'></tui-icon>
@@ -141,33 +141,33 @@
 		
 			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">产品特色</tui-divider>
 			<view class="tui-product-img tui-radius-all">
-				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
+				<rich-text :nodes="productInfo.productCharacteristic"></rich-text>
 			</view>
 			
 			
 			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">行程介绍</tui-divider>
 			<view class="tui-product-img tui-radius-all">
-				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
+				<rich-text :nodes="productInfo.travelInfo"></rich-text>
 			</view>
 			
 			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">费用包含</tui-divider>
 			<view class="tui-product-img tui-radius-all">
-				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
+				<rich-text :nodes="productInfo.costInclusion"></rich-text>
 			</view>
 			
 			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">费用不含</tui-divider>
 			<view class="tui-product-img tui-radius-all">
-				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
+				<rich-text :nodes="productInfo.costExcluded"></rich-text>
 			</view>
 			
 			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">预定须知</tui-divider>
 			<view class="tui-product-img tui-radius-all">
-				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
+				<rich-text :nodes="productInfo.reservationNotes"></rich-text>
 			</view>
 			
 			<tui-divider dividerColor="#5677fc" color="#5677fc" :size="35">退改规则</tui-divider>
 			<view class="tui-product-img tui-radius-all">
-				<image :src="'https://www.thorui.cn/img/detail/'+(index+1)+'.jpg'" v-for="(img,index) in 20" :key="index" mode="widthFix"></image>
+				<rich-text :nodes="productInfo.returnRules"></rich-text>
 			</view>
 			
 			
@@ -226,6 +226,7 @@
 	import tuiBottomPopup from "../../components/bottom-popup/bottom-popup"
 	import tuiNumberbox from "../../components/numberbox/numberbox"
 	import tuiDivider from "../../components/divider/divider"
+	const request = require("../../../../common/request.js")
 	export default {
 		components: {
 			tuiIcon,
@@ -246,19 +247,17 @@
 				opcity: 0,
 				iconOpcity: 0.5,
 				banner: [
-					"https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg",
-					"https://img.alicdn.com/bao/uploaded/i4/TB183HdTkvoK1RjSZFwbyAiCFXa_023743.jpg_400x400.jpg",
-					"https://img.alicdn.com/bao/uploaded/i8/TB1VhyDXBr0gK0jSZFnJpLRRXXa_042641.jpg_400x400.jpg",
-					"https://img.alicdn.com/bao/uploaded/i3/TB15LnLX7P2gK0jSZPxluecQpXa_123205.jpg_400x400.jpg",
-					"https://img.alicdn.com/bao/uploaded/i3/TB1aYWzJmzqK1RjSZFLOBMn2XXa_034912.jpg_400x400.jpg",
-					"https://img.alicdn.com/bao/uploaded/i4/4227758366/O1CN01dncFYW2Bfg0mqahf4_!!4227758366.jpg_400x400.jpg",
-					"https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01tInl6T1aDbvxUkUgt_!!2437173296.jpg_400x400.jpg",
-					"https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01xn3ULz1aDbuPFivIE_!!2437173296.jpg_400x400.jpg"
+					
 				],
-				bannerIndex: 0
+				bannerIndex: 0,
+				productInfo:{
+					
+				}
 			}
 		},
 		onLoad: function(options) {
+			let id = options.id;
+			this.getProductInfo(id);
 			let obj = {};
 			// #ifdef MP-WEIXIN
 			obj = wx.getMenuButtonBoundingClientRect();
@@ -280,6 +279,24 @@
 			})
 		},
 		methods: {
+			//获取产品信息详情
+			getProductInfo:function(id){
+				let data=request.request('/app/tourism/productInfo/info?id='+id,{
+					method:"GET",
+					data:{
+						id:id
+					}
+				});
+				data.then((v)=>{
+					this.productInfo=v;
+					this.productInfo.productCharacteristic=this.productInfo.productCharacteristic.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
+					this.productInfo.travelInfo=this.productInfo.travelInfo.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
+					this.productInfo.costInclusion=this.productInfo.costInclusion.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
+					this.productInfo.reservationNotes=this.productInfo.reservationNotes.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
+					this.productInfo.returnRules=this.productInfo.returnRules.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
+					this.banner=v.picList;
+				});
+			},
 			bannerChange: function(e) {
 				this.bannerIndex = e.detail.current
 			},
@@ -516,7 +533,7 @@
 
 	.tui-product-title {
 		background: #fff;
-		padding: 30upx 0;
+		padding: 30upx 0  50upx;
 	}
 
 	.tui-pro-pricebox {

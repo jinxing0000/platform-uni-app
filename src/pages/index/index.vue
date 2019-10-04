@@ -64,13 +64,13 @@
 			
 			<view class="product-list">
 				<!--商品列表-->
-				<view class="pro-item" @tap="goToProductInfo" v-for="(item,index) in productList" :key="index">
-					<image :src="item.img" class="pro-img" mode="widthFix" />
+				<view class="pro-item" @tap="goToProductInfo(item.id)" v-for="(item,index) in productListPage.list" :key="index">
+					<image :src="item.productGuidePicUrl" class="pro-img" mode="widthFix" />
 					<view class="pro-content">
-						<view class="pro-tit">{{item.name}}</view>
+						<view class="pro-tit">{{item.productName}}</view>
 						<view>
 							<view class="pro-price">
-								<text class="sale-price">￥{{item.sale}}起</text>
+								<text class="sale-price">￥{{item.adultPrice}}起</text>
 								<view class="tui-tag-small tui-danger tui-tag-fillet">精品</view>
 							</view>
 							<!-- <view class="pro-pay">{{item.payNum}}人付款</view> -->
@@ -91,6 +91,7 @@
 <script>
 	import tuiLoadmore from "../components/loadmore/loadmore"
 	import tuiNomore from "../components/nomore/nomore"
+	const request = require("../../../common/request.js")
 	export default {
 		components: {
 			tuiLoadmore,
@@ -98,11 +99,6 @@
 		},
 		data() {
 			return {
-				hotSearch: [
-					"休闲零食",
-					"自热火锅",
-					"小冰箱迷你"
-				],
 				bannerList: [
 					'../../static/index/banner1.jpg',
 					'../../static/index/banner2.jpg',
@@ -113,163 +109,43 @@
 				autoplay: true,
 				interval: 2000,
 				duration: 500,
-				pageIndex: 1,
-				productList: [{
-						img: "https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg",
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/TB183HdTkvoK1RjSZFwbyAiCFXa_023743.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i8/TB1VhyDXBr0gK0jSZFnJpLRRXXa_042641.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i3/TB15LnLX7P2gK0jSZPxluecQpXa_123205.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}, {
-						img: "https://img.alicdn.com/bao/uploaded/i3/TB1aYWzJmzqK1RjSZFLOBMn2XXa_034912.jpg_400x400.jpg",
-						name: "独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/4227758366/O1CN01dncFYW2Bfg0mqahf4_!!4227758366.jpg_400x400.jpg",
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01tInl6T1aDbvxUkUgt_!!2437173296.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01xn3ULz1aDbuPFivIE_!!2437173296.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/TB11EIwLAPoK1RjSZKb7_41IXXa_092932.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}
-				],
-				loadData: [{
-						img: "https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg",
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/TB183HdTkvoK1RjSZFwbyAiCFXa_023743.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i8/TB1VhyDXBr0gK0jSZFnJpLRRXXa_042641.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i3/TB15LnLX7P2gK0jSZPxluecQpXa_123205.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}, {
-						img: "https://img.alicdn.com/bao/uploaded/i3/TB1aYWzJmzqK1RjSZFLOBMn2XXa_034912.jpg_400x400.jpg",
-						name: "独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/4227758366/O1CN01dncFYW2Bfg0mqahf4_!!4227758366.jpg_400x400.jpg",
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01tInl6T1aDbvxUkUgt_!!2437173296.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01xn3ULz1aDbuPFivIE_!!2437173296.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/TB11EIwLAPoK1RjSZKb7_41IXXa_092932.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}
-				],
+				productListPage:{
+					list:[],
+					currPage:1,
+					totalPage:1
+				},
 				loadding: false,
 				pullUpOn: true
 			}
 		},
-		onLoad() {
-			
+		//第一次加载
+		onLoad:function() {
+			this.getProductList();
 		},
 		methods: {
+			//获取产品数据
+			getProductList:function(){
+				let data=request.request('/app/tourism/productInfo/getPageList',{
+					method:"GET",
+					data:{
+						page:this.productListPage.currPage,
+						limit:1
+					}
+				});
+				data.then((v)=>{
+					this.productListPage.list=this.productListPage.list.concat(v.list);
+					this.productListPage.totalPage=v.totalPage;
+					this.productListPage.currPage=v.currPage;
+				});
+			},
 			searchStart(){
 				uni.navigateTo({
 					url: '/pages/search/search'
 				});
 			},
-			goToProductInfo(){
+			goToProductInfo(id){
 				uni.navigateTo({
-					url: '/pages/product/productInfo/productInfo'
+					url: '/pages/product/productInfo/productInfo?id='+id
 				});
 			},
 			goToProductList(){
@@ -283,14 +159,14 @@
 		 */
 		onPullDownRefresh: function() {
 			//延时为了看效果
-			setTimeout(() => {
-				this.productList = this.loadData;
-				this.pageIndex = 1;
-				this.pullUpOn = true;
-				this.loadding = false;
-				uni.stopPullDownRefresh();
-				this.tui.toast("刷新成功")
-			}, 200)
+			// setTimeout(() => {
+			// 	this.productList = this.loadData;
+			// 	this.pageIndex = 1;
+			// 	this.pullUpOn = true;
+			// 	this.loadding = false;
+			// 	uni.stopPullDownRefresh();
+			// 	this.tui.toast("刷新成功")
+			// }, 200)
 		},
 		
 		/**
@@ -299,13 +175,13 @@
 		onReachBottom: function() {
 			if (!this.pullUpOn) return;
 			this.loadding = true;
-			if (this.pageIndex == 3) {
+			if (this.productListPage.currPage == this.productListPage.totalPage) {
 				this.loadding = false;
-				this.pullUpOn = false
+				this.pullUpOn = false;
 			} else {
-				this.productList = this.productList.concat(this.loadData);
-				this.pageIndex = this.pageIndex + 1;
-				this.loadding = false
+				this.getProductList();
+				this.productListPage.currPage = this.productListPage.currPage + 1;
+				this.loadding = false;
 			}
 		}
 	}
