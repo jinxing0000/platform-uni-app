@@ -8,10 +8,12 @@
 			 :key="index" :params="item">
 				<template v-slot:content>
 					<view class="list-item">
-						<image :src="'../../../static/pedestrians/'+item.img" class="item-img"></image>
+						<!-- <image :src="'../../../static/pedestrians/'+item.img" class="item-img" ></image> -->
+						<image :src="'../../../static/pedestrians/man.png'" class="item-img" v-if="item.sex === '男'"></image>
+						<image :src="'../../../static/pedestrians/woman.png'" class="item-img" v-if="item.sex === '女'"></image>
 						<view class="item-box">
-							<view class="item-title">{{item.title}}</view>
-							<view class="item-time">手机号：13333445566身份证号：142401199312134233</view>
+							<view class="item-title">{{item.name}}</view>
+							<view class="item-time">手机号：{{item.mobile}}身份证号：{{item.cardNumber}}</view>
 						</view>
 					</view>
 				</template>
@@ -24,31 +26,37 @@
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">旅客姓名：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入旅客姓名" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入旅客姓名" maxlength="50" type="text" v-model="channelMerchantsPeople.name"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">身份证号：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入身份证号" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入身份证号" maxlength="50" type="text" v-model="channelMerchantsPeople.cardNumber"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">手机号：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入手机号" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入手机号" maxlength="50" type="text" v-model="channelMerchantsPeople.mobile"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">性别：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入性别" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入性别" maxlength="50" type="text" v-model="channelMerchantsPeople.sex"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">出生日期：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入出生日期" maxlength="50" type="text" />
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入出生日期" maxlength="50" type="text" v-model="channelMerchantsPeople.birthDate"/>
+					</view>
+				</tui-list-cell>
+				<tui-list-cell :hover="false">
+					<view class="tui-line-cell">
+						<view class="tui-title">年龄：</view>
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入年龄" maxlength="50" type="text" v-model="channelMerchantsPeople.age"/>
 					</view>
 				</tui-list-cell>
 				<view class="tui-btn-box">
@@ -63,6 +71,7 @@
 	const form = require("../../components/utils/formValidation.js")
 	import tuiListCell from "../../components/list-cell/list-cell"
 	import tuiSwipeAction from "../../components/swipe-action/swipe-action"
+	const request = require("../../../../common/request.js")
 	export default {
 		components:{
 			tuiSwipeAction,
@@ -71,20 +80,9 @@
 		data() {
 			return {
 				showList:true,
-				dataList: [{
-					id: 1,
-					title: "张三",
-					img: 'man.png'
-				}, {
-					id: 2,
-					title: "李四",
-					img: 'woman.png'
-				}, {
-					id: 3,
-					title: "王五",
-					img: 'woman.png'
-				},
-				],
+				dataList: [],
+				channelMerchantsPeople:{},
+				openId:"",
 				actions: [
 					{
 						name: '修改',
@@ -105,7 +103,28 @@
 				]
 			}
 		},
+		onShow: function() {
+			const openId = uni.getStorageSync('openId');
+			this.openId=openId;
+			this.getChannelMerchantsPeoplePageList(openId);
+		},
 		methods: {
+			getChannelMerchantsPeoplePageList:function(openId){
+				let list=this;
+				let data=request.request('/app/base/channelMerchantsPeople/getPageList',{
+					method:"GET",
+					data:{
+						channelId:openId,
+						page:1,
+						limit:10
+					}
+				});
+				data.then((v)=>{
+					if(v){
+						list.dataList=v.list;
+					}
+				});
+			},
 			handlerButton(e) {
 				let index = e.index;
 				let item = e.item;
@@ -117,19 +136,72 @@
 				}
 				//删除按钮
 				else if(index===1){
-					
+					let ids=new Array();
+					ids[0]=item.id;
+					this.deleteByIds(ids);
 				}
 			},
 			//去新增页面
 			goAddPage:function(){
+				this.channelMerchantsPeople={};
 				this.showList=false;
 			},
 			//去修改页面
 			goUpdatePage:function(id){
+				this.getInfoById(id);
 				this.showList=false;
 			},
+			deleteByIds:function(ids){
+				let info=this;
+				let data=request.request('/app/base/channelMerchantsPeople/delete',{
+					method:"DELETE",
+					data:ids
+				});
+				data.then((v)=>{
+					uni.showToast({
+						title: "删除成功！！",
+						icon: 'none',
+						duration: 2000
+					})
+					info.getChannelMerchantsPeoplePageList(info.openId);
+				});
+			},
+			getInfoById:function(id){
+				let info=this;
+				let data=request.request('/app/base/channelMerchantsPeople/info?id='+id,{
+					method:"GET",
+					data:{
+						id:id
+					}
+				});
+				data.then((v)=>{
+					info.channelMerchantsPeople=v;
+				});
+			},
 			saveOrUpdate: function(e) {
-				console.log("提交数据！！")
+				this.channelMerchantsPeople.channelId=this.openId;
+				let id = this.channelMerchantsPeople.id;
+				console.log(this.channelMerchantsPeople);
+				let url="/app/base/channelMerchantsPeople/update";
+				let type="PUT";
+				if(id==null){
+					url="/app/base/channelMerchantsPeople/save";
+					type="POST";
+				}
+				let list=this;
+				let data=request.request(url,{
+					method:type,
+					data:this.channelMerchantsPeople
+				});
+				data.then((v)=>{
+					uni.showToast({
+						title: "保存成功！！",
+						icon: 'none',
+						duration: 2000
+					})
+					list.getChannelMerchantsPeoplePageList(list.openId);
+					list.showList=true;
+				});
 				//表单规则
 				// let rules = [{
 				// 	name: "name",
@@ -186,7 +258,7 @@
 				// 		icon: "none"
 				// 	});
 				// }
-				this.showList=true;
+				// this.showList=true;
 			},
 		}
 	}
