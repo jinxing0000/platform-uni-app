@@ -32,31 +32,37 @@
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">身份证号：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入身份证号" maxlength="50" type="text" v-model="channelMerchantsPeople.cardNumber"/>
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入身份证号" maxlength="50" type="idcard" v-model="channelMerchantsPeople.cardNumber"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">手机号：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入手机号" maxlength="50" type="text" v-model="channelMerchantsPeople.mobile"/>
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入手机号" maxlength="50" type="number" v-model="channelMerchantsPeople.mobile"/>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">性别：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入性别" maxlength="50" type="text" v-model="channelMerchantsPeople.sex"/>
+						<radio-group @change="radioChange">
+							<label class="radio" ><radio value="男" :checked="channelMerchantsPeople.sex==='男'"  name="sex"/>男</label>
+							<label class="radio" ><radio value="女" :checked="channelMerchantsPeople.sex==='女'"  name="sex"/>女</label>
+						</radio-group>
+						<!-- <input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入性别" maxlength="50" type="text" v-model="channelMerchantsPeople.sex"/> -->
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">出生日期：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入出生日期" maxlength="50" type="text" v-model="channelMerchantsPeople.birthDate"/>
+						 <picker mode="date" :value="channelMerchantsPeople.birthDate" @change="bindDateChange">
+						    <view class="uni-input">{{channelMerchantsPeople.birthDate}}</view>
+						 </picker>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
 						<view class="tui-title">年龄：</view>
-						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入年龄" maxlength="50" type="text" v-model="channelMerchantsPeople.age"/>
+						<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入年龄" maxlength="50" type="number" v-model="channelMerchantsPeople.age"/>
 					</view>
 				</tui-list-cell>
 				<view class="tui-btn-box">
@@ -78,7 +84,11 @@
 			tuiListCell
 		},
 		data() {
+			const currentDate = this.getDate({
+			    format: true
+			 })
 			return {
+				date: currentDate,
 				showList:true,
 				dataList: [],
 				channelMerchantsPeople:{},
@@ -143,7 +153,7 @@
 			},
 			//去新增页面
 			goAddPage:function(){
-				this.channelMerchantsPeople={};
+				this.channelMerchantsPeople={sex:"男",birthDate:this.date};
 				this.showList=false;
 			},
 			//去修改页面
@@ -182,6 +192,52 @@
 				this.channelMerchantsPeople.channelId=this.openId;
 				let id = this.channelMerchantsPeople.id;
 				console.log(this.channelMerchantsPeople);
+				let mobile=this.channelMerchantsPeople.mobile;
+				let cardNumber=this.channelMerchantsPeople.cardNumber;
+				let age=this.channelMerchantsPeople.age;
+				let birthDate=this.channelMerchantsPeople.birthDate;
+				const mobileReg = /^[1][3,4,5,6,7,8,9][0-9]{9}$/
+				if(!mobileReg.test(mobile)){
+					uni.showToast({
+						title: "请输入有效的手机号！！",
+						icon: 'none',
+						duration: 2000
+					})
+					return;
+				}
+				const cardNUmberReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+				if(!cardNUmberReg.test(cardNumber)){
+					uni.showToast({
+						title: "请输入有效的身份证号！！",
+						icon: 'none',
+						duration: 2000
+					})
+					return;
+				}
+				if(!age){
+					uni.showToast({
+						title: "年龄不能为空！！",
+						icon: 'none',
+						duration: 2000
+					})
+					return ;
+				}
+				if(age&&age.length>2){
+					uni.showToast({
+						title: "年龄必须小于2位！！",
+						icon: 'none',
+						duration: 2000
+					})
+					return ;
+				}
+				if(!birthDate){
+					uni.showToast({
+						title: "请选择生日！！",
+						icon: 'none',
+						duration: 2000
+					})
+					return ;
+				}
 				let url="/app/base/channelMerchantsPeople/update";
 				let type="PUT";
 				if(id==null){
@@ -259,6 +315,26 @@
 				// 	});
 				// }
 				// this.showList=true;
+			},
+			radioChange: function(evt) {
+			    this.channelMerchantsPeople.sex=evt.target.value;
+			},
+			getDate(type) {
+			    const date = new Date();
+			    let year = date.getFullYear();
+			    let month = date.getMonth() + 1;
+			    let day = date.getDate();
+			   if (type === 'start') {
+			        year = year - 60;
+			    } else if (type === 'end') {
+			        year = year + 2;
+			    }
+			    month = month > 9 ? month : '0' + month;;
+			    day = day > 9 ? day : '0' + day;
+			    return `${year}-${month}-${day}`;
+			},
+			bindDateChange: function(e) {
+			    this.channelMerchantsPeople.birthDate = e.target.value;
 			},
 		}
 	}

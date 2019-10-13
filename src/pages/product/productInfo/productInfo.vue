@@ -319,7 +319,7 @@
 			},
 			goOrderSubmitPage:function(){
 				uni.navigateTo({
-					url: '/pages/order/orderSubmit/orderSubmit'
+					url: '/pages/order/orderSubmit/orderSubmit?id='+this.productInfo.id
 				});
 			}
 		}

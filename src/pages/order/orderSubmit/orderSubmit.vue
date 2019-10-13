@@ -3,37 +3,37 @@
 		<form>
 			<tui-list-cell>
 				<view class="tui-line-cell">
-					<view>泰国旅游 普吉岛旅游 6天5晚半自由行 普吉跟团游纯玩 亲子旅游团</view>
+					<view>{{productInfo.productName}}</view>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
-					<view class="tui-title">出发城市：太原</view>
+					<view class="tui-title">出发城市：{{productInfo.startingCity}}</view>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
-					<view class="tui-title">出发日期：2019-09-23出发2019-09-29返回</view>
+					<view class="tui-title">出发日期：{{productInfo.startDate}}出发{{productInfo.endDate}}返回</view>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title tui-flex-1">成人</view>
-					<view class="tui-title tui-flex-1" style="color: red;">￥2559元/人</view>
+					<view class="tui-title tui-flex-1" style="color: red;">￥{{productInfo.adultPrice}}元/人</view>
 					<tui-numberbox :min="1" :max="10" :value="value2" ></tui-numberbox>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title tui-flex-1">儿童</view>
-					<view class="tui-title tui-flex-1" style="color: red;">￥1559元/人</view>
+					<view class="tui-title tui-flex-1" style="color: red;">￥{{productInfo.childrenPrice}}元/人</view>
 					<tui-numberbox :min="1" :max="10" :value="value2" ></tui-numberbox>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title tui-flex-1">单房差</view>
-					<view class="tui-title tui-flex-1" style="color: red;">￥1080元/间</view>
+					<view class="tui-title tui-flex-1" style="color: red;">￥{{productInfo.singleRoomPrice}}元/间</view>
 					<tui-numberbox :min="1" :max="10" :value="value2" ></tui-numberbox>
 				</view>
 			</tui-list-cell>
@@ -111,6 +111,7 @@
 	const form = require("../../components/utils/formValidation.js")
 	import tuiListCell from "../../components/list-cell/list-cell"
 	import tuiSwipeAction from "../../components/swipe-action/swipe-action"
+	const request = require("../../../../common/request.js")
 	export default {
 		components: {
 			tuiIcon,
@@ -129,12 +130,28 @@
 		data() {
 			return {
 				dropdownShow: false,
+				productInfo:{
+					
+				}
 			}
 		},
 		onLoad: function(options) {
-			
+			let id = options.id;
+			this.getProductInfo(id);
 		},
 		methods: {
+			//获取产品信息详情
+			getProductInfo:function(id){
+				let data=request.request('/app/tourism/productInfo/info?id='+id,{
+					method:"GET",
+					data:{
+						id:id
+					}
+				});
+				data.then((v)=>{
+					this.productInfo=v;
+				});
+			},
 			goOrderSubmitPage:function(){
 				uni.navigateTo({
 					url: '/pages/order/orderSubmit/orderSubmit'
