@@ -40,32 +40,32 @@
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">出行人：</view>
-					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入出行人" maxlength="50" type="text" />
+					<input placeholder-class="phcolor" class="tui-input" name="contactsName" placeholder="请输入出行人" maxlength="50" type="text" />
 					<button class="tui-btn tui-btn-small tui-primary" hover-class="tui-primary-hover" @click="selectPedestriansList">选择</button>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">联系人：</view>
-					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系人" maxlength="50" type="text" />
+					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系人" maxlength="50" type="text" v-model="productOrder.contactsName"/>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">联系电话：</view>
-					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系电话" maxlength="50" type="text" />
+					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系电话" maxlength="50" type="text" v-model="productOrder.contactNumber"/>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">联系邮箱：</view>
-					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系邮箱" maxlength="50" type="text" />
+					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入联系邮箱" maxlength="50" type="text" v-model="productOrder.email"/>
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">买家留言：</view>
-					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入买家留言" maxlength="50" type="text" />
+					<input placeholder-class="phcolor" class="tui-input" name="age" placeholder="请输入买家留言" maxlength="50" type="text" v-model="productOrder.leavingMessage"/>
 				</view>
 			</tui-list-cell>
 		</form>
@@ -132,6 +132,9 @@
 				dropdownShow: false,
 				productInfo:{
 					
+				},
+				productOrder:{
+					
 				}
 			}
 		},
@@ -150,9 +153,12 @@
 				});
 				data.then((v)=>{
 					this.productInfo=v;
+					this.productOrder.id=v.id;
+					this.productOrder.orderType="1";
 				});
 			},
 			goOrderSubmitPage:function(){
+				console.log(this.productOrder);
 				uni.navigateTo({
 					url: '/pages/order/orderSubmit/orderSubmit'
 				});
