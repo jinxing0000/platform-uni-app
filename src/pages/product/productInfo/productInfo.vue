@@ -252,7 +252,7 @@
 				bannerIndex: 0,
 				productInfo:{
 					
-				}
+				},
 			}
 		},
 		onLoad: function(options) {
