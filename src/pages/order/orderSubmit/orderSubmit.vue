@@ -14,7 +14,7 @@
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
 					<view class="tui-line-cell">
-						<view class="tui-title">出发日期：{{productInfo.startDate}}出发{{productInfo.endDate}}返回</view>
+						<view class="tui-title">产品有效期：{{productInfo.startDate}}至{{productInfo.endDate}}</view>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
@@ -36,6 +36,14 @@
 						<view class="tui-title tui-flex-1">单房差</view>
 						<view class="tui-title tui-flex-1" style="color: red;">￥{{productInfo.singleRoomPrice}}元/间</view>
 						<tui-numberbox :min="0" :max="100" :value="productOrder.singleRoomNumber" @change="setSingleRoomNumber"></tui-numberbox>
+					</view>
+				</tui-list-cell>
+				<tui-list-cell :hover="false">
+					<view class="tui-line-cell">
+						<view class="tui-title">出生日期：</view>
+						 <picker mode="date" :value="productOrder.setOutDate" @change="bindDateChange" :start="productInfo.startDate" end="productInfo.endDate">
+						    <view class="uni-input">{{productOrder.setOutDate}}</view>
+						 </picker>
 					</view>
 				</tui-list-cell>
 				<tui-list-cell :hover="false">
@@ -81,6 +89,14 @@
 					<view class="tui-line-cell">
 						<view class="tui-title">买家留言：</view>
 						<input placeholder-class="phcolor" class="tui-input" name="leavingMessage" placeholder="请输入买家留言" maxlength="50" type="text" v-model="productOrder.leavingMessage"/>
+					</view>
+				</tui-list-cell>
+				<tui-list-cell :hover="false">
+					<view class="tui-line-cell">
+					</view>
+				</tui-list-cell>
+				<tui-list-cell :hover="false">
+					<view class="tui-line-cell">
 					</view>
 				</tui-list-cell>
 			</form>
@@ -170,15 +186,19 @@
 					adultNumber:1,
 					childrenNumber:0,
 					singleRoomNumber:0,
-					productOrderPeopleList:[]
+					productOrderPeopleList:[],
+					setOutDate:""
 				},
 				peopleDataList: [],
-				peopleMap:{}
+				peopleMap:{},
+				openId:""
 			}
 		},
 		onLoad: function(options) {
 			let id = options.id;
 			this.getProductInfo(id);
+			const openId = uni.getStorageSync('openId');
+			this.openId=openId;
 		},
 		methods: {
 			//获取产品信息详情
@@ -195,6 +215,10 @@
 					this.productOrder.orderType="1";
 					this.productOrder.adultNumber=1;
 					this.productOrder.orderTotal=v.adultPrice;
+					this.productOrder.setOutDate=v.startDate;
+					this.productOrder.channelMerchantsId=this.openId;
+					this.productOrder.supplierId=v.supplierId;
+					this.productOrder.supplierName=v.supplierName;
 				});
 			},
 			goOrderSubmitPage:function(){
@@ -271,12 +295,11 @@
 			},
 			//查询出行人信息
 			getChannelMerchantsPeoplePageList:function(){
-				const openId = uni.getStorageSync('openId');
 				let list=this;
 				let data=request.request('/app/base/channelMerchantsPeople/getPageList',{
 					method:"GET",
 					data:{
-						channelId:openId,
+						channelId:this.openId,
 						page:1,
 						limit:100
 					}
@@ -303,9 +326,12 @@
 				for(let i=0;i<values.length;i++){
 					peopleList[i]=this.peopleMap.get(values[i]);
 				}
-				this.productOrder.productOrderPeopleList=peopleList;
-				console.log(this.productOrder.productOrderPeopleList);	
-			}
+				this.productOrder.productOrderPeopleList=peopleList;	
+			},
+			//出行时间
+			bindDateChange: function(e) {
+			    this.productOrder.setOutDate = e.target.value;
+			},
 		}
 	}
 </script>
