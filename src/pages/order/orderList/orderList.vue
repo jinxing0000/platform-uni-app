@@ -11,7 +11,7 @@
 				<i class="icon icon-sys"></i>
 			</a>
 		</header> -->
-		<section class="aui-scrollView">
+		<section class="aui-scrollView" v-show="showList">
 			<div class="aui-tab" data-ydui-tab>
 				<ul class="tab-nav">
 					<block v-for="(menuTab,index) in menuTabs" :key="index">
@@ -22,42 +22,55 @@
 				</ul>
 				<div class="divHeight"></div>
 				<div class="tab-panel">
-					<block v-for="(menuList,index2) in menuLists" :key="index2" >
-						<div :class="[currentTab==index2 ? 'tab-panel-item tab-active' : 'tab-panel-item']">
-							<block v-for="(menuList2,index3) in menuList" :key="index3">
+					<block v-for="(menuList2,index2) in menuLists" :key="index2" >
+						<div>
+							<block :key="index3">
 								<div class="tab-item">
-									<a href="javascript:void(0);" class="aui-well-item aui-well-item-clear">
-										<div class="aui-well-item-hd">
+									<div class="aui-well-item aui-well-item-clear">
+										<!-- <div class="aui-well-item-hd">
 											<img :src="menuList2.logoimg" alt="">
-										</div>
+										</div> -->
 										<div class="aui-well-item-bd">
-											<h3>{{menuList2.dname}}</h3>
+											<h3>{{menuList2.supplierName}}</h3>
 										</div>
-										<span class="aui-well-item-fr">{{menuList2.zt}}</span>
-									</a>
-									<div class="aui-mail-product" @click="goOrderDetailsPage">
-										<a href="javascript:;" class="aui-mail-product-item">
+										<div v-if="menuList2.state === '01'">
+											待处理
+										</div>
+										<div v-if="menuList2.state === '02'">
+											未出行
+										</div>
+										<div v-if="menuList2.state === '03'">
+											已完成
+										</div>
+										<div v-if="menuList2.state === '04'">
+											已取消
+										</div>
+										<span class="aui-well-item-fr" v-if="menuList2.state === '01'" @click="deleteOrderById(menuList2.id);"></span>
+									</div>
+									<div class="aui-mail-product" @click="goOrderDetailsPage(menuList2.id)">
+										<a class="aui-mail-product-item">
 											<div class="aui-mail-product-item-hd">
-												<img :src="menuList2.img" alt="">
+												<img :src="menuList2.productGuidePicUrl" alt="">
 											</div>
 											<div class="aui-mail-product-item-bd">
-												<p>{{menuList2.name}}</p>
+												<p>{{menuList2.productName}}</p>
 											</div>
 										</a>
 									</div>
 									<a href="javascript:;" class="aui-mail-payment">
 										<p>
-											共{{menuList2.sum}}件商品 实付款: ￥{{menuList2.pri}}
+											<!-- 共{{menuList2.sum}}件商品 实付款: ￥{{menuList2.pri}} -->
+											 成人{{menuList2.adultNumber}}人,儿童{{menuList2.childrenNumber}}人,单房差{{menuList2.singleRoomNumber}}间,共: ￥{{menuList2.orderTotal}}元
 										</p>
 									</a>
-									<div class="aui-mail-button">
+									<!-- <div class="aui-mail-button">
 										<a href="javascript:;" :class="[menuList2.but_ddshouhuo==0 ? 'hd' : menuList2.but_ddshouhuo==2 ? '' :'aui-df-color']">等待收货</a>
 										<a href="javascript:;" :class="[menuList2.but_wuliu==0 ? 'hd' : menuList2.but_wuliu==2 ? '' :'aui-df-color']">查看物流</a>
 										<a href="javascript:;" :class="[menuList2.but_rebuy==0 ? 'hd' : menuList2.but_rebuy==2 ? '' :'aui-df-color']">再次购买</a>
 										<a href="javascript:;" :class="[menuList2.but_pingjia==0 ? 'hd' : menuList2.but_pingjia==2 ? '' :'aui-df-color']">评价晒单</a>
 										<a href="javascript:;" :class="[menuList2.but_fapiao==0 ? 'hd' : menuList2.but_fapiao==2 ? '' :'aui-df-color']">查看发票</a>
 										<a href="javascript:;" :class="[menuList2.but_zhifu==0 ? 'hd' : menuList2.but_zhifu==2 ? '' :'aui-df-color']">去支付</a>
-									</div>
+									</div> -->
 								</div>
 								<div :class="[index3+1==menuList.length ? 'hd':'divHeight']"></div>
 							</block>
@@ -66,11 +79,126 @@
 				</div>
 			</div>
 		</section>
+		
+		<div v-show="!showList">
+			<tui-list-cell>
+				<view class="tui-line-cell">
+					<view>{{productOrderDetails.productInfo.productName}}</view>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title">出发城市：{{productOrderDetails.productInfo.startingCity}}</view>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title">产品有效期：{{productOrderDetails.productInfo.startDate}}至{{productOrderDetails.productInfo.endDate}}</view>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title tui-flex-1">成人</view>
+					<view class="tui-title tui-flex-1" style="color: red;">￥{{productOrderDetails.productInfo.adultPrice}}元/人</view>
+					<tui-numberbox :min="0" :max="100" :value="productOrderDetails.productOrderInfo.adultNumber" @change="setAdultNumber"></tui-numberbox>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title tui-flex-1">儿童</view>
+					<view class="tui-title tui-flex-1" style="color: red;">￥{{productOrderDetails.productInfo.childrenPrice}}元/人</view>
+					<tui-numberbox :min="0" :max="100" :value="productOrderDetails.productOrderInfo.childrenNumber" @change="setChildrenNumber"></tui-numberbox>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title tui-flex-1">单房差</view>
+					<view class="tui-title tui-flex-1" style="color: red;">￥{{productOrderDetails.productInfo.singleRoomPrice}}元/间</view>
+					<tui-numberbox :min="0" :max="100" :value="productOrderDetails.productOrderInfo.singleRoomNumber" @change="setSingleRoomNumber"></tui-numberbox>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title">出生日期：</view>
+					 <picker mode="date" :value="productOrderDetails.productOrder.setOutDate" @change="bindDateChange" :start="productInfo.startDate" end="productInfo.endDate">
+					    <view class="uni-input">{{productOrderDetails.productOrder.setOutDate}}</view>
+					 </picker>
+				</view>
+			</tui-list-cell>
+			<tui-swipe-action :actions="actions"  @click="handlerButton" v-for="(item,index) in productOrderDetails.productOrderPeopleList"
+			 :key="index" :params="item">
+				<template v-slot:content>
+					<view class="list-item">
+						<!-- <image :src="'../../../static/pedestrians/'+item.img" class="item-img" ></image> -->
+						<image :src="'../../../static/pedestrians/man.png'" class="item-img" v-if="item.sex === '男'"></image>
+						<image :src="'../../../static/pedestrians/woman.png'" class="item-img" v-if="item.sex === '女'"></image>
+						<view class="item-box">
+							<view class="item-title">{{item.name}}</view>
+							<view class="item-time">身份证号：{{item.cardNumber}}</view>
+						</view>
+					</view>
+				</template>
+			</tui-swipe-action>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title">联系人：</view>
+					<input placeholder-class="phcolor" class="tui-input" name="contactsName" placeholder="请输入联系人" maxlength="50" type="text" v-model="productOrderDetails.productOrderInfo.contactsName"/>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title">联系电话：</view>
+					<input placeholder-class="phcolor" class="tui-input" name="contactNumber" placeholder="请输入联系电话" maxlength="50" type="text" v-model="productOrderDetails.productOrderInfo.contactNumber"/>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title">联系邮箱：</view>
+					<input placeholder-class="phcolor" class="tui-input" name="email" placeholder="请输入联系邮箱" maxlength="50" type="text" v-model="productOrderDetails.productOrderInfo.email"/>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
+					<view class="tui-title">买家留言：</view>
+					<input placeholder-class="phcolor" class="tui-input" name="leavingMessage" placeholder="请输入买家留言" maxlength="50" type="text" v-model="productOrderDetails.productOrderInfo.leavingMessage"/>
+				</view>
+			</tui-list-cell>
+			<view class="tui-btn-box">
+				<button class="btn-primary" hover-class="btn-hover" formType="button" type="primary" @click="backOrderList">返回</button>
+			</view>
+		</div>
 	</section>
 </template>
 
 <script>
+	const request = require("../../../../common/request.js")
+	import tuiIcon from "../../components/icon/icon"
+	import tuiTag from "../../components/tag/tag"
+	import tuiBadge from "../../components/badge/badge.vue"
+	import tuiNomore from "../../components/nomore/nomore"
+	import tuiButton from "../../components/button/button"
+	import tuiTopDropdown from "../../components/top-dropdown/top-dropdown"
+	import tuiBottomPopup from "../../components/bottom-popup/bottom-popup"
+	import tuiNumberbox from "../../components/numberbox/numberbox"
+	import tuiDivider from "../../components/divider/divider"
+	import tuiDropdownList from "../../components/dropdown-list/dropdown-list"
+	import tuiListCell from "../../components/list-cell/list-cell"
+	import tuiSwipeAction from "../../components/swipe-action/swipe-action"
 	export default {
+		components: {
+			tuiIcon,
+			tuiTag,
+			tuiBadge,
+			tuiNomore,
+			tuiButton,
+			tuiTopDropdown,
+			tuiBottomPopup,
+			tuiNumberbox,
+			tuiDivider,
+			tuiSwipeAction,
+			tuiListCell,
+			tuiDropdownList
+		},
 		data() {
 			return {
 				scrollLeft: 0,
@@ -89,139 +217,69 @@
 						name: '已取消'
 					},
 				],
-				menuLists: [
-					[
-						{
-							"logoimg": 'https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg',
-							"dname":"自营Apple产品专营店",
-							"zt":"已取消",
-							"img": 'https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg',
-							"name":"利物浦官方 独家出品纪念版沙发",
-							"sum":"1",
-							"pri":"6899.00",
-							// 0=没有,1=有,2=标红
-							"but_rebuy":2,
-							"but_pingjia":1,
-							"but_fapiao":1,
-							"but_zhifu":0,
-							"but_wuliu":0,
-							"but_ddshouhuo":0,
-						},
-						{
-							"logoimg": '../../static/icon-logo.png',
-							"dname":"自营Apple产品专营店",
-							"zt":"已取消",
-							"img": '../../static/pd-002.png',
-							"name":"Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机",
-							"sum":"1",
-							"pri":"3899.00",
-							"but_rebuy":2,
-							"but_pingjia":0,
-							"but_fapiao":0,
-							"but_zhifu":0,
-							"but_wuliu":0,
-							"but_ddshouhuo":0,
-						},
-						{
-							"logoimg": '../../static/icon-logo.png',
-							"dname":"自营Apple产品专营店",
-							"zt":"已取消",
-							"img": '../../static/pd-003.png',
-							"name":"Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机Apple 苹果 iPhone8 Plus 4G手机 深空灰 移动联通版64G裸机",
-							"sum":"1",
-							"pri":"4899.00",
-							"but_rebuy":2,
-							"but_pingjia":1,
-							"but_fapiao":0,
-							"but_zhifu":0,
-							"but_wuliu":0,
-							"but_ddshouhuo":0,
-						},
-					],
-					[
-						{
-							"logoimg": '../../static/icon-logo.png',
-							"dname":"SONY京东自营官方旗舰店",
-							"zt":"等待付款",
-							"img": '../../static/pd-002.png',
-							"name":"索尼（SONY）WH-1000XM2 Hi-Res无线蓝牙耳机 智能降噪耳机 头戴式 1000x二代 香槟金",
-							"sum":"1",
-							"pri":"2899.00",
-							"but_rebuy":0,
-							"but_pingjia":0,
-							"but_fapiao":0,
-							"but_zhifu":2,
-							"but_wuliu":0,
-							"but_ddshouhuo":0,
-						}
-					],
-					[
-						{
-							"logoimg": '../../static/icon-logo.png',
-							"dname":"自营FILA产品专营店",
-							"zt":"等待收货",
-							"img": '../../static/pd-003.png',
-							"name":"FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41FILA斐乐男鞋2018夏季新款LOGO轻便复古跑鞋运动鞋男 标准白 41",
-							"sum":"1",
-							"pri":"5899.00",
-							"but_ddshouhuo":2,
-							"but_rebuy":1,
-							"but_pingjia":0,
-							"but_fapiao":0,
-							"but_zhifu":0,
-							"but_wuliu":1,
-						}
-					],
-					[
-						{
-							"logoimg": '../../static/icon-logo.png',
-							"dname":"自营零食产品专营店",
-							"zt":"已完成",
-							"img": '../../static/pd-004.png',
-							"name":"盼盼 酸梅汤 酸梅汁风味饮料 250ml*24盒 整箱 果汁饮料",
-							"sum":"1",
-							"pri":"21.00",
-							"but_rebuy":2,
-							"but_pingjia":1,
-							"but_fapiao":1,
-							"but_zhifu":0,
-							"but_wuliu":0,
-							"but_ddshouhuo":0,
-						}
-					],
-					[
-						{
-							"logoimg": '../../static/icon-logo.png',
-							"dname":"自营OPPO产品专营店",
-							"zt":"已取消",
-							"img": '../../static/pd-005.png',
-							"name":"OPPO R15 全面屏双摄拍照手机 4G+128G 雪盈白 全网通 移动联通电信4G 双卡双待手机",
-							"sum":"1",
-							"pri":"21.00",
-							"but_rebuy":2,
-							"but_pingjia":1,
-							"but_fapiao":1,
-							"but_zhifu":0,
-							"but_wuliu":0,
-							"but_ddshouhuo":0,
-						}
-					],
-				]
+				orderState:"0",
+				openId:"",
+				menuLists: [],
+				productOrderDetails:{},
+				showList:true
 			}
 		},
-		onLoad() {
-			// for (var i = 0; i < this.menuLists.length; i++) {
-			// 	this.getDateList(i);
-			// }
+		onShow: function(options) {
+			const openId = uni.getStorageSync('openId');
+			this.openId=openId;
+			this.getOrderPageList(this.orderState,this.openId);
 		},
 		methods: {
 			swichMenu: async function(current) { //点击其中一个选项
 				if (this.currentTab == current) {
 					return false;
 				} else {
+					//全部订单
+					if(current==0){
+						this.orderState="0";
+					}
+					//未处理订单
+					else if(current==1){
+						this.orderState="01";
+					}
+					//未出行订单
+					else if(current==2){
+						this.orderState="02";
+					}
+					//已完成订单
+					else if(current==3){
+						this.orderState="03";
+					}
+					//已取消订单
+					else if(current==4){	
+						this.orderState="04";
+					}
+					this.getOrderPageList(this.orderState,this.openId);
 					this.currentTab = current;
 					this.setScrollLeft(current);
 				}
+			},
+			//按照状态查询订单
+			getOrderPageList:function(state,openId){
+				let data=request.request('/app/tourism/productOrder/getPageList',{
+					method:"GET",
+					data:{
+						state:state,
+						channelMerchantsId:openId,
+						page:1,
+						limit:10
+					}
+				});
+				data.then((v)=>{
+					if(v.list.length==0){
+						uni.showToast({
+							title: "暂无订单！！",
+							icon: 'none',
+							duration: 2000
+						})
+					}
+					this.menuLists=v.list;
+				});
 			},
 			swiperChange: async function(e) {
 				let index = e.target.current;
@@ -251,10 +309,26 @@
 				// var entity = this.menuTabs[tabIndex].name;
 				// this.menuLists[tabIndex].push(entity);
 			},
-			goOrderDetailsPage:function(){
-				uni.navigateTo({
-					url: '/pages/order/orderDetails/orderDetails'
+			goOrderDetailsPage:function(id){
+				let data=request.request('/app/tourism/productOrder/info',{
+					method:"GET",
+					data:{
+						id:id
+					}
 				});
+				data.then((v)=>{
+					this.productOrderDetails=v;
+				});
+				this.showList=false;
+				// uni.navigateTo({
+				// 	url: '/pages/order/orderDetails/orderDetails'
+				// });
+			},
+			deleteOrderById:function(orderId){
+				console.log(orderId);
+			},
+			backOrderList:function(){
+				this.showList=true;
 			}
 		}
 	}
@@ -783,5 +857,157 @@
 	
 	.hd{
 		display: none;
+	}
+	
+	
+	
+	
+	
+	
+	
+	.tui-line-cell {
+		width: 100%;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+	}
+	
+	.tui-title {
+		line-height: 32rpx;
+		flex-shrink: 0;
+	}
+	
+	.tui-input {
+		font-size: 32rpx;
+		color: #333;
+		padding-left: 20rpx;
+		flex: 1;
+	}
+	
+	.radio-group {
+		margin-left: auto;
+		transform: scale(0.8);
+		transform-origin: 100% center;
+		flex-shrink: 0;
+	}
+	
+	.tui-radio {
+		display: inline-block;
+		padding-left: 28rpx;
+		font-size: 36rpx;
+		vertical-align: middle;
+	}
+	
+	/** form **/
+	.tui-btn-box {
+		padding: 40rpx 50rpx;
+		box-sizing: border-box;
+	}
+	
+	.btn-gray {
+		margin-top: 30rpx;
+	}
+	
+	.tui-tips {
+		padding: 30rpx;
+		color: #999;
+		font-size: 20rpx;
+	}
+	
+	.container {
+		background: #fff;
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+	
+	.list-item {
+		padding: 30upx 30upx;
+		display: flex;
+		align-items: item;
+	}
+	
+	.item-img {
+		height: 60upx;
+		width: 60upx;
+		margin-right: 20upx;
+		display: block
+	}
+	
+	.item-box {
+		flex: 1;
+		width: 70%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between
+	}
+	
+	.item-title {
+		font-size: 32upx;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	
+	}
+	
+	.item-time {
+		color: #999;
+		font-size: 24upx;
+	}
+	
+	
+	.tui-btn-box {
+		padding: 40rpx 50rpx;
+		box-sizing: border-box;
+	}
+	
+	
+	
+	/** form **/
+	.tui-line-cell {
+		width: 100%;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+	}
+	
+	.tui-title {
+		line-height: 32rpx;
+		flex-shrink: 0;
+	}
+	
+	.tui-input {
+		font-size: 32rpx;
+		color: #333;
+		padding-left: 20rpx;
+		flex: 1;
+	}
+	
+	.radio-group {
+		margin-left: auto;
+		transform: scale(0.8);
+		transform-origin: 100% center;
+		flex-shrink: 0;
+	}
+	
+	.tui-radio {
+		display: inline-block;
+		padding-left: 28rpx;
+		font-size: 36rpx;
+		vertical-align: middle;
+	}
+	
+	/** form **/
+	.tui-btn-box {
+		padding: 40rpx 50rpx;
+		box-sizing: border-box;
+	}
+	
+	.btn-gray {
+		margin-top: 30rpx;
+	}
+	
+	.tui-tips {
+		padding: 30rpx;
+		color: #999;
+		font-size: 24rpx;
 	}
 </style>

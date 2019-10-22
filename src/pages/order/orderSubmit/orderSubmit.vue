@@ -219,6 +219,8 @@
 					this.productOrder.channelMerchantsId=this.openId;
 					this.productOrder.supplierId=v.supplierId;
 					this.productOrder.supplierName=v.supplierName;
+					this.productOrder.productName=v.productName;
+					this.productOrder.productGuidePicUrl=v.productGuidePicUrl;
 				});
 			},
 			goOrderSubmitPage:function(){
@@ -259,7 +261,9 @@
 					data:this.productOrder	
 				});
 				data.then((v)=>{
-					console.log(v);
+					uni.switchTab({
+						url: '/pages/order/orderList/orderList'
+					});
 				});
 			},
 			//设置成人数
