@@ -37,19 +37,19 @@
 		
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="goToProductList()">
+			<view class="cate-item" @click="goToProductList('1')">
 				<image src="../../static/index/gnl.png"></image>
 				<text>国内游</text>
 			</view>
-			<view class="cate-item" @click="goToProductList()">
+			<view class="cate-item" @click="goToProductList('2')">
 				<image src="../../static/index/jwl.png"></image>
 				<text>境外游</text>
 			</view>
-			<view class="cate-item" @click="goToProductList()">
+			<view class="cate-item" @click="goToProductList('3')">
 				<image src="../../static/index/yry.png"></image>
 				<text>一日游</text>
 			</view>
-			<view class="cate-item" @click="goToProductList()">
+			<view class="cate-item" @click="goToProductList('4')">
 				<image src="../../static/index/fty.png"></image>
 				<text>赴台游</text>
 			</view>
@@ -148,7 +148,9 @@
 					url: '/pages/product/productInfo/productInfo?id='+id
 				});
 			},
-			goToProductList(){
+			goToProductList(lineType){
+				uni.removeStorageSync('lineType');
+				uni.setStorageSync('lineType', lineType);
 				uni.switchTab({
 					url: '/pages/product/productList/productList'
 				});

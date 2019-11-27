@@ -62,13 +62,13 @@
 		<view class="container">
 			<view class="product-list" :style="{marginTop:px(dropScreenH+18)}">
 				<!--商品列表-->
-				<view class="pro-item" @tap="goToProductInfo" v-for="(item,index) in productList" :key="index">
-					<image :src="item.img" class="pro-img" mode="widthFix" />
+				<view class="pro-item" @tap="goToProductInfo(item.id)" v-for="(item,index) in productListPage.list" :key="index">
+					<image :src="item.productGuidePicUrl" class="pro-img" mode="widthFix" />
 					<view class="pro-content">
-						<view class="pro-tit">{{item.name}}</view>
+						<view class="pro-tit">{{item.productName}}</view>
 						<view>
 							<view class="pro-price">
-								<text class="sale-price">￥{{item.sale}}</text>
+								<text class="sale-price">￥{{item.adultPrice}}</text>
 								<view class="tui-tag-small tui-danger tui-tag-fillet">精品</view>
 							</view>
 							<!-- <view class="pro-pay">{{item.payNum}}人付款</view> -->
@@ -105,10 +105,10 @@
 				<scroll-view class="tui-drawer-scroll" scroll-y :style="{height:drawerH+'px'}">
 					<view class="tui-drawer-title">
 						<text class="tui-title-bold">价格区间</text>
-						<view class="tui-attr-right">
+						<!-- <view class="tui-attr-right">
 							<tui-icon name="position-fill" color="#e41f19" :size="14" class="tui-location"></tui-icon>
 							<text>北京朝阳区三环到四环之间</text>
-						</view>
+						</view> -->
 					</view>
 					<view class="tui-drawer-content">
 						<input placeholder-class="tui-phcolor" class="tui-input" placeholder="最低价" maxlength="11" type='number' />
@@ -117,7 +117,7 @@
 					</view>
 
 					<view class="tui-drawer-title">
-						<text class="tui-title-bold">全部分类</text>
+						<text class="tui-title-bold">路线分类</text>
 						<view class="tui-all-box tui-icon-ml">
 							<view class="tui-attr-right">全部</view>
 							<tui-icon name="arrowdown" :size="14" color="#444" tui-icon-class="tui-ml"></tui-icon>
@@ -125,18 +125,18 @@
 					</view>
 					<view class="tui-drawer-content tui-flex-attr">
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">男装</view>
+							<view class="tui-attr-ellipsis" >国内游</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">女装</view>
+							<view class="tui-attr-ellipsis">境外游</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">运动服饰</view>
+							<view class="tui-attr-ellipsis">一日游</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">户外鞋服</view>
+							<view class="tui-attr-ellipsis">赴台游</view>
 						</view>
-						<view class="tui-attr-item">
+						<!-- <view class="tui-attr-item">
 							<view class="tui-attr-ellipsis">文化</view>
 						</view>
 						<view class="tui-attr-item">
@@ -147,10 +147,10 @@
 						</view>
 						<view class="tui-attr-item">
 							<view class="tui-attr-ellipsis">艺术</view>
-						</view>
+						</view> -->
 					</view>
 
-					<view class="tui-drawer-title">
+					<!-- <view class="tui-drawer-title">
 						<text class="tui-title-bold">品牌</text>
 						<view class="tui-all-box tui-icon-ml">
 							<view class="tui-attr-right tui-active ">花花公子，七匹狼（SEPTWOLVES）</view>
@@ -167,10 +167,10 @@
 						<view class="tui-attr-item">
 							<view class="tui-attr-ellipsis">吉普</view>
 						</view>
-					</view>
+					</view> -->
 
 					<view class="tui-drawer-title">
-						<text class="tui-title-bold">尺码</text>
+						<text class="tui-title-bold">出发城市</text>
 						<view class="tui-all-box tui-icon-ml">
 							<view class="tui-attr-right">全部</view>
 							<tui-icon name="arrowup" :size="14" color="#444" tui-icon-class="tui-ml"></tui-icon>
@@ -178,39 +178,39 @@
 					</view>
 					<view class="tui-drawer-content tui-flex-attr">
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">27</view>
+							<view class="tui-attr-ellipsis">太原市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">28</view>
+							<view class="tui-attr-ellipsis">大同市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">29</view>
+							<view class="tui-attr-ellipsis">朔州市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">30</view>
+							<view class="tui-attr-ellipsis">忻州市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">31</view>
+							<view class="tui-attr-ellipsis">阳泉市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">32</view>
+							<view class="tui-attr-ellipsis">吕梁市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">33</view>
+							<view class="tui-attr-ellipsis">晋中市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">34</view>
+							<view class="tui-attr-ellipsis">长治市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">35</view>
+							<view class="tui-attr-ellipsis">晋城市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">36</view>
+							<view class="tui-attr-ellipsis">临汾市</view>
 						</view>
 						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">37</view>
+							<view class="tui-attr-ellipsis">运城市</view>
 						</view>
-						<view class="tui-attr-item">
+						<!-- <view class="tui-attr-item">
 							<view class="tui-attr-ellipsis">38</view>
 						</view>
 						<view class="tui-attr-item">
@@ -230,14 +230,14 @@
 						</view>
 						<view class="tui-attr-item">
 							<view class="tui-attr-ellipsis">44</view>
-						</view>
+						</view> -->
 					</view>
 					<view class="tui-safearea-bottom"></view>
 				</scroll-view>
 				<view class="tui-attr-btnbox">
 					<view class="tui-attr-safearea">
 						<view class="tui-drawer-btn tui-drawerbtn-black" hover-class="tui-white-hover" :hover-stay-time="150">重置</view>
-						<view class="tui-drawer-btn tui-drawerbtn-primary" hover-class="tui-red-hover" :hover-stay-time="150" @tap="closeDrawer">确定(80万+件商品)</view>
+						<view class="tui-drawer-btn tui-drawerbtn-primary" hover-class="tui-red-hover" :hover-stay-time="150" @tap="closeDrawer">确定</view>
 					</view>
 				</view>
 			</view>
@@ -257,6 +257,7 @@
 	import tuiLoadmore from "../../components/loadmore/loadmore"
 	import tuiNomore from "../../components/nomore/nomore"
 	import tuiTopDropdown from "../../components/top-dropdown/top-dropdown"
+	const request = require("../../../../common/request.js")
 	export default {
 		components: {
 			tuiIcon,
@@ -283,10 +284,8 @@
 				drawerH: 0, //抽屉内部scrollview高度
 				selectedName: "综合",
 				selectH: 0,
-				dropdownList: [{
-					name: "综合",
-					selected: true
-				}, {
+				dropdownList: [
+				{
 					name: "价格升序",
 					selected: false,
 				}, {
@@ -294,311 +293,78 @@
 					selected: false,
 				}],
 				attrArr: [{
-					name: "新品",
-					selectedName: "新品",
+					name: "精品",
+					selectedName: "精品",
 					isActive: false,
 					list: []
 				}, {
-					name: "品牌",
-					selectedName: "品牌",
+					name: "路线类型",
+					selectedName: "路线类型",
 					isActive: false,
 					list: [{
-						name: "trendsetter",
+						name: "国内游",
 						selected: false
 					}, {
-						name: "维肯（Viken）",
+						name: "境外游",
 						selected: false
 					}, {
-						name: "AORO",
+						name: "一日游",
 						selected: false
 					}, {
-						name: "苏发",
+						name: "赴台游",
 						selected: false
-					}, {
-						name: "飞花令（FHL）",
-						selected: false
-					}, {
-						name: "叶梦丝",
-						selected: false
-					}, {
-						name: "ITZOOM",
-						selected: false
-					}, {
-						name: "亿魅",
-						selected: false
-					}, {
-						name: "LEIKS",
-						selected: false
-					}, {
-						name: "雷克士",
-						selected: false
-					}, {
-						name: "蕊芬妮",
-						selected: false
-					}, {
-						name: "辉宏达",
-						selected: false
-					}, {
-						name: "英西达",
-						selected: false
-					}, {
-						name: "戴为",
-						selected: false
-					}, {
-						name: "魔风者",
-						selected: false
-					}, {
-						name: "即满",
-						selected: false
-					}, {
-						name: "北比",
-						selected: false
-					}, {
-						name: "娱浪",
-						selected: false
-					}, {
-						name: "搞怪猪",
-						selected: false
-					}]
+					},
+					]
 				}, {
-					name: "类型",
-					selectedName: "类型",
+					name: "出发城市",
+					selectedName: "出发城市",
 					isActive: false,
 					list: [{
-						name: "线充套装",
+						name: "太原市",
 						selected: false
 					}, {
-						name: "单条装",
+						name: "大同市",
 						selected: false
 					}, {
-						name: "车载充电器",
+						name: "朔州市",
 						selected: false
 					}, {
-						name: "PD快充",
+						name: "	忻州市",
 						selected: false
 					}, {
-						name: "数据线转换器",
+						name: "阳泉市",
 						selected: false
 					}, {
-						name: "多条装",
+						name: "吕梁市",
 						selected: false
 					}, {
-						name: "充电插头",
+						name: "	晋中市",
 						selected: false
 					}, {
-						name: "无线充电器",
+						name: "	长治市",
 						selected: false
 					}, {
-						name: "座式充电器",
+						name: "	晋城市",
 						selected: false
 					}, {
-						name: "万能充",
+						name: "临汾市",
 						selected: false
 					}, {
-						name: "转换器/转接线",
+						name: "运城市",
 						selected: false
-					}, {
-						name: "MFI苹果认证",
-						selected: false
-					}, {
-						name: "转换器",
-						selected: false
-					}, {
-						name: "苹果认证",
-						selected: false
-					}]
-				}, {
-					name: "适用手机",
-					selectedName: "适用手机",
-					isActive: false,
-					list: [{
-						name: "通用",
-						selected: false
-					}, {
-						name: "vivo",
-						selected: false
-					}, {
-						name: "OPPO",
-						selected: false
-					}, {
-						name: "魅族",
-						selected: false
-					}, {
-						name: "苹果",
-						selected: false
-					}, {
-						name: "华为",
-						selected: false
-					}, {
-						name: "三星",
-						selected: false
-					}, {
-						name: "荣耀",
-						selected: false
-					}, {
-						name: "诺基亚5",
-						selected: false
-					}, {
-						name: "荣耀4",
-						selected: false
-					}, {
-						name: "诺基",
-						selected: false
-					}, {
-						name: "荣耀",
-						selected: false
-					}, {
-						name: "诺基亚2",
-						selected: false
-					}, {
-						name: "荣耀2",
-						selected: false
-					}, {
-						name: "诺基",
-						selected: false
-					}]
+					},
+					]
 				}],
 				pageIndex: 1,
-				productList: [{
-						img: "https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i1/TB15p6PbQL0gK0jSZFtgIlQCXXa_070746.jpg_400x400.jpg",
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/TB183HdTkvoK1RjSZFwbyAiCFXa_023743.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i8/TB1VhyDXBr0gK0jSZFnJpLRRXXa_042641.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i3/TB15LnLX7P2gK0jSZPxluecQpXa_123205.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}, {
-						img: "https://img.alicdn.com/bao/uploaded/i3/TB1aYWzJmzqK1RjSZFLOBMn2XXa_034912.jpg_400x400.jpg",
-						name: "独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/4227758366/O1CN01dncFYW2Bfg0mqahf4_!!4227758366.jpg_400x400.jpg",
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01tInl6T1aDbvxUkUgt_!!2437173296.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i2/2437173296/O1CN01xn3ULz1aDbuPFivIE_!!2437173296.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: "https://img.alicdn.com/bao/uploaded/i4/TB11EIwLAPoK1RjSZKb7_41IXXa_092932.jpg_400x400.jpg",
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}
-				],
-				loadData: [{
-						img: 1,
-						name: "利物浦官方 独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: 2,
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: 3,
-						name: "利物浦官方 独家出品大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: 4,
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: 5,
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}, {
-						img: 1,
-						name: "利物浦官方 独家出品纪念版沙发",
-						sale: 599,
-						factory: 899,
-						payNum: 2342
-					},
-					{
-						img: 2,
-						name: "好看好养活的绿色养眼小盆栽，超级实惠",
-						sale: 29,
-						factory: 69,
-						payNum: 999
-					},
-					{
-						img: 3,
-						name: "大红床上用品三件套",
-						sale: 299,
-						factory: 699,
-						payNum: 666
-					},
-					{
-						img: 4,
-						name: "利物浦官方 独家出品花花碎花床上用品三件套",
-						sale: 1599,
-						factory: 2899,
-						payNum: 236
-					},
-					{
-						img: 5,
-						name: "利物浦官方 独家出品纪念版书柜，便宜又省空间，超级划算",
-						sale: 599,
-						factory: 899,
-						payNum: 2399
-					}
-				],
+				productListPage: {
+					list:[],
+					currPage:1,
+					totalPage:1
+				},
+				queryParams:{
+					limit:10,
+					page:1,
+				},
 				loadding: false,
 				pullUpOn: true
 			}
@@ -627,7 +393,33 @@
 				}
 			})
 		},
+		onShow: function(options) {
+			this.queryParams={limit:10,page:1,};
+			let lineType = uni.getStorageSync('lineType');
+			uni.removeStorageSync('lineType');
+			this.queryParams.lineType=lineType;
+			this.getProductList();
+		},
 		methods: {
+			//获取产品数据
+			getProductList:function(){
+				let data=request.request('/app/tourism/productInfo/getPageList',{
+					method:"GET",
+					data:this.queryParams
+				});
+				data.then((v)=>{
+					if(v.currPage===1){
+						this.productListPage.list=v.list;
+					}else{
+						this.productListPage.list=this.productListPage.list.concat(v.list);
+					}
+					//this.productListPage.list=this.productListPage.list.concat(v.list);
+					this.productListPage.totalPage=v.totalPage;
+					this.productListPage.currPage=v.currPage;
+					this.queryParams.page=v.currPage;
+					this.loadding = false;
+				});
+			},
 			px(num) {
 				return uni.upx2px(num) + "px"
 			},
@@ -736,36 +528,36 @@
 					url: '/pages/search/search'
 				});
 			},
-			goToProductInfo: function(){
+			goToProductInfo: function(id){
 				uni.navigateTo({
-					url: '/pages/product/productInfo/productInfo'
+					url: '/pages/product/productInfo/productInfo?id='+id
 				});
 			},
 		},
+		/**
+		 * 页面相关事件处理函数--监听用户下拉动作
+		 */
 		onPullDownRefresh: function() {
-			let loadData = JSON.parse(JSON.stringify(this.productList));
-			loadData = loadData.splice(0, 10);
-			this.productList = loadData;
-			this.pageIndex = 1;
-			this.pullUpOn = true;
-			this.loadding = false;
-			uni.stopPullDownRefresh()
+			// let loadData = JSON.parse(JSON.stringify(this.productList));
+			// loadData = loadData.splice(0, 10);
+			// this.productList = loadData;
+			// this.pageIndex = 1;
+			// this.pullUpOn = true;
+			// this.loadding = false;
+			// uni.stopPullDownRefresh()
 		},
+		/**
+		 * 页面上拉触底事件的处理函数
+		 */
 		onReachBottom: function() {
 			if (!this.pullUpOn) return;
 			this.loadding = true;
-			if (this.pageIndex == 4) {
+			if (this.productListPage.currPage ==this.productListPage.totalPage) {
 				this.loadding = false;
 				this.pullUpOn = false
 			} else {
-				let loadData = JSON.parse(JSON.stringify(this.productList));
-				loadData = loadData.splice(0, 10);
-				if (this.pageIndex == 1) {
-					loadData = loadData.reverse();
-				}
-				this.productList = this.productList.concat(loadData);
-				this.pageIndex = this.pageIndex + 1;
-				this.loadding = false
+				this.queryParams.page=this.queryParams.page+1;
+				this.getProductList();
 			}
 		}
 	}

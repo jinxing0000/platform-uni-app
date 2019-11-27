@@ -141,6 +141,18 @@
 			</tui-swipe-action>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
+					<view class="tui-title">订单总价/元：</view>
+					<input placeholder-class="phcolor" class="tui-input" name="contactsName" placeholder="请输入订单总价" maxlength="50" type="text" v-model="productOrderDetails.productOrderInfo.orderTotal"/>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false" v-if="productOrderDetails.productOrderInfo.state === '03'">
+				<view class="tui-line-cell">
+					<view class="tui-title">实际成交价格/元：</view>
+					<input placeholder-class="phcolor" class="tui-input" name="contactsName" placeholder="请输入实际成交价格" maxlength="50" type="text" v-model="productOrderDetails.productOrderInfo.transactionPrice"/>
+				</view>
+			</tui-list-cell>
+			<tui-list-cell :hover="false">
+				<view class="tui-line-cell">
 					<view class="tui-title">联系人：</view>
 					<input placeholder-class="phcolor" class="tui-input" name="contactsName" placeholder="请输入联系人" maxlength="50" type="text" v-model="productOrderDetails.productOrderInfo.contactsName"/>
 				</view>
