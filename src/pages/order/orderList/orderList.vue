@@ -239,6 +239,11 @@
 		onShow: function(options) {
 			const openId = uni.getStorageSync('openId');
 			this.openId=openId;
+			const orderState = uni.getStorageSync('orderState');
+			uni.removeStorageSync('orderState');
+			if(orderState){
+				this.swichMenu(orderState);
+			}
 			this.getOrderPageList(this.orderState,this.openId);
 		},
 		methods: {

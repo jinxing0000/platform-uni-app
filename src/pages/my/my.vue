@@ -25,15 +25,15 @@
 
 		<view class='bottom-container'>
 			<view class='ul-item'>
-				<view @tap='tapEvent' data-index="2" data-key='未处理订单' class='item' hover-class="opcity" :hover-stay-time="150">
+				<view @tap='tapEvent(1)' data-index="2" data-key='未处理订单' class='item' hover-class="opcity" :hover-stay-time="150">
 					<image class='item-img' src='../../static/my/dcldd.png'></image>
 					<text class='item-name'>未处理订单</text>
 				</view>
-				<view @tap='tapEvent' data-index="2" data-key='' class='item' hover-class="opcity" :hover-stay-time="150">
+				<view @tap='tapEvent(2)' data-index="2" data-key='' class='item' hover-class="opcity" :hover-stay-time="150">
 					<image class='item-img' src='../../static/my/wcxdd.png'></image>
 					<text class='item-name'>待出行订单</text>
 				</view>
-				<view @tap='tapEvent' data-index="2" data-key='已完成订单' class='item' hover-class="opcity" :hover-stay-time="150">
+				<view @tap='tapEvent(3)' data-index="2" data-key='已完成订单' class='item' hover-class="opcity" :hover-stay-time="150">
 					<image class='item-img' src='../../static/my/ywcdd.png'></image>
 					<text class='item-name'>已完成订单</text>
 				</view>
@@ -171,20 +171,12 @@
 			edit() {
 				this.tui.toast("功能开发中~")
 			},
-			tapEvent: function(e) {
-				let index = e.currentTarget.dataset.index;
-				let url = "";
-				if (index == 1) {
-					url = '../about/about'
-				} else if (index == 2) {
-					let key = e.currentTarget.dataset.key;
-					url = '../maps/maps?key=' + key
-				} else {
-					url = '../log/log'
-				}
-				uni.navigateTo({
-					url: url
-				})
+			tapEvent: function(state) {
+				uni.removeStorageSync('orderState');
+				uni.setStorageSync('orderState', state);
+				uni.switchTab({
+					url: '/pages/order/orderList/orderList'
+				});
 			},
 			github: function(type) {
 				if (type == 1) {
