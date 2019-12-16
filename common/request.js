@@ -2,7 +2,7 @@
 const fetch = {
 	interfaceUrl: function() {
 		//接口地址
-		return "http://192.168.3.180:8080";
+		return "http://192.168.2.183:8080";
 	},
 	toast: function(tips) {
 		uni.showToast({

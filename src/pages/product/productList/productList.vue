@@ -85,7 +85,7 @@
 			<scroll-view class="tui-scroll-box" scroll-y :scroll-top="scrollTop">
 				<view class="tui-seizeaseat-20"></view>
 				<view class="tui-drop-item tui-icon-middle" :class="[item.selected?'tui-bold':'']" v-for="(item,index) in attrData"
-				 :key="index" @tap.stop="btnSelected" :data-index="index">
+				 :key="index" @tap.stop="btnSelected(item.name)" :data-index="index">
 					<tui-icon name="check" :size="16" color="#e41f19" :bold="true" v-if="item.selected" tui-icon-class="tui-middle"></tui-icon>
 					<text class="tui-ml tui-middle">{{item.name}}</text>
 				</view>
@@ -111,9 +111,9 @@
 						</view> -->
 					</view>
 					<view class="tui-drawer-content">
-						<input placeholder-class="tui-phcolor" class="tui-input" placeholder="最低价" maxlength="11" type='number' />
+						<input placeholder-class="tui-phcolor" class="tui-input" placeholder="最低价" maxlength="11" type='number' v-model="queryParams.startAdultPrice"/>
 						<tui-icon name="reduce" color="#333" :size="14"></tui-icon>
-						<input placeholder-class="tui-phcolor" class="tui-input" placeholder="最高价" maxlength="11" type='number' />
+						<input placeholder-class="tui-phcolor" class="tui-input" placeholder="最高价" maxlength="11" type='number' v-model="queryParams.endAdultPrice"/>
 					</view>
 
 					<view class="tui-drawer-title">
@@ -124,16 +124,16 @@
 						</view>
 					</view>
 					<view class="tui-drawer-content tui-flex-attr">
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.lineType === '1'}" @click="setLineType('1')">
 							<view class="tui-attr-ellipsis" >国内游</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.lineType === '2'}" @click="setLineType('2')">
 							<view class="tui-attr-ellipsis">境外游</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.lineType === '3'}" @click="setLineType('3')">
 							<view class="tui-attr-ellipsis">一日游</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.lineType === '4'}" @click="setLineType('4')">
 							<view class="tui-attr-ellipsis">赴台游</view>
 						</view>
 						<!-- <view class="tui-attr-item">
@@ -177,37 +177,37 @@
 						</view>
 					</view>
 					<view class="tui-drawer-content tui-flex-attr">
-						<view class="tui-attr-item">
-							<view class="tui-attr-ellipsis">太原市</view>
+						<view class="tui-attr-item " :class="{'tui-btmItem-active':queryParams.startingCity == '太原市'}" @click="setStartingCity('太原市')">
+							<view class="tui-attr-ellipsis ">太原市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '大同市'}" @click="setStartingCity('大同市')">
 							<view class="tui-attr-ellipsis">大同市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '朔州市'}" @click="setStartingCity('朔州市')">
 							<view class="tui-attr-ellipsis">朔州市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '忻州市'}" @click="setStartingCity('忻州市')">
 							<view class="tui-attr-ellipsis">忻州市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '阳泉市'}" @click="setStartingCity('阳泉市')">
 							<view class="tui-attr-ellipsis">阳泉市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '吕梁市'}" @click="setStartingCity('吕梁市')">
 							<view class="tui-attr-ellipsis">吕梁市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '晋中市'}" @click="setStartingCity('晋中市')">
 							<view class="tui-attr-ellipsis">晋中市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '长治市'}" @click="setStartingCity('长治市')">
 							<view class="tui-attr-ellipsis">长治市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '晋城市'}" @click="setStartingCity('晋城市')">
 							<view class="tui-attr-ellipsis">晋城市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '临汾市'}" @click="setStartingCity('临汾市')">
 							<view class="tui-attr-ellipsis">临汾市</view>
 						</view>
-						<view class="tui-attr-item">
+						<view class="tui-attr-item" :class="{'tui-btmItem-active':queryParams.startingCity === '运城市'}" @click="setStartingCity('运城市')">
 							<view class="tui-attr-ellipsis">运城市</view>
 						</view>
 						<!-- <view class="tui-attr-item">
@@ -236,8 +236,8 @@
 				</scroll-view>
 				<view class="tui-attr-btnbox">
 					<view class="tui-attr-safearea">
-						<view class="tui-drawer-btn tui-drawerbtn-black" hover-class="tui-white-hover" :hover-stay-time="150">重置</view>
-						<view class="tui-drawer-btn tui-drawerbtn-primary" hover-class="tui-red-hover" :hover-stay-time="150" @tap="closeDrawer">确定</view>
+						<view class="tui-drawer-btn tui-drawerbtn-black" hover-class="tui-white-hover" :hover-stay-time="150" @tap="reset">重置</view>
+						<view class="tui-drawer-btn tui-drawerbtn-primary" hover-class="tui-red-hover" :hover-stay-time="150" @tap="queryList">确定</view>
 					</view>
 				</view>
 			</view>
@@ -303,16 +303,20 @@
 					isActive: false,
 					list: [{
 						name: "国内游",
-						selected: false
+						selected: false,
+						value:'1'
 					}, {
 						name: "境外游",
-						selected: false
+						selected: false,
+						value:'2'
 					}, {
 						name: "一日游",
-						selected: false
+						selected: false,
+						value:'3'
 					}, {
 						name: "赴台游",
-						selected: false
+						selected: false,
+						value:'4'
 					},
 					]
 				}, {
@@ -321,37 +325,48 @@
 					isActive: false,
 					list: [{
 						name: "太原市",
-						selected: false
+						selected: false,
+						value:'太原市'
 					}, {
 						name: "大同市",
-						selected: false
+						selected: false,
+						value:'大同市'
 					}, {
 						name: "朔州市",
-						selected: false
+						selected: false,
+						value:'朔州市'
 					}, {
-						name: "	忻州市",
-						selected: false
+						name: "忻州市",
+						selected: false,
+						value:'忻州市'
 					}, {
 						name: "阳泉市",
-						selected: false
+						selected: false,
+						value:'忻州市'
 					}, {
 						name: "吕梁市",
-						selected: false
+						selected: false,
+						value:'吕梁市'
 					}, {
-						name: "	晋中市",
-						selected: false
+						name: "晋中市",
+						selected: false,
+						value:'晋中市'
 					}, {
-						name: "	长治市",
-						selected: false
+						name: "长治市",
+						selected: false,
+						value:'长治市'
 					}, {
-						name: "	晋城市",
-						selected: false
+						name: "晋城市",
+						selected: false,
+						value:'晋城市'
 					}, {
 						name: "临汾市",
-						selected: false
+						selected: false,
+						value:'临汾市'
 					}, {
 						name: "运城市",
-						selected: false
+						selected: false,
+						value:'运城市'
 					},
 					]
 				}],
@@ -364,6 +379,7 @@
 				queryParams:{
 					limit:10,
 					page:1,
+					startingCity:'',
 				},
 				loadding: false,
 				pullUpOn: true
@@ -394,7 +410,7 @@
 			})
 		},
 		onShow: function(options) {
-			this.queryParams={limit:10,page:1,};
+			this.queryParams={limit:10,page:1,startingCity:'',lineType:''};
 			let lineType = uni.getStorageSync('lineType');
 			uni.removeStorageSync('lineType');
 			this.queryParams.lineType=lineType;
@@ -420,9 +436,19 @@
 					this.loadding = false;
 				});
 			},
+			//设置出发城市
+			setStartingCity:function(name){
+				this.queryParams.startingCity=name;
+				let cityList=this.attrArr[1];
+			},
+			//设置产品路线
+			setLineType:function(value){
+				this.queryParams.lineType=value;
+			},
 			px(num) {
 				return uni.upx2px(num) + "px"
 			},
+			//展开路线
 			btnDropChange: function(e) {
 				let index = e.currentTarget.dataset.index;
 				let arr = JSON.parse(JSON.stringify(this.attrArr[index].list));
@@ -432,6 +458,23 @@
 					this.attrData = arr;
 					this.attrIndex = index;
 					this.dropScreenShow = true;
+					if(index===1){
+						for(let i=0;i<this.attrData.length;i++){
+							if(this.queryParams.lineType===this.attrData[i].value){
+								this.$set(this.attrData[i], "selected", true);
+							}else{
+								this.$set(this.attrData[i], "selected", false);
+							}
+						}
+					}else if(index===2){ 
+						for(let i=0;i<this.attrData.length;i++){
+							if(this.queryParams.startingCity===this.attrData[i].name){
+								this.$set(this.attrData[i], "selected", true);
+							}else{
+								this.$set(this.attrData[i], "selected", false);
+							}
+						}
+					}
 					this.$set(this.attrArr[index], "isActive", false);
 					this.scrollTop = 1;
 					this.$nextTick(() => {
@@ -439,16 +482,43 @@
 					});
 				}
 			},
+			//选择下拉内容
 			btnSelected: function(e) {
-				let index = e.currentTarget.dataset.index;
-				this.$set(this.attrData[index], "selected", !this.attrData[index].selected)
+				//let index = e.currentTarget.dataset.index;
+				for(let i=0;i<this.attrData.length;i++){
+					if(this.attrData[i].name===e){
+						this.$set(this.attrData[i], "selected", true);
+						let value=this.attrData[i].value;
+						if(this.attrData.length===11){
+							this.queryParams.startingCity=value;
+						}
+						else{
+						   this.queryParams.lineType=value;
+						}
+					}else{
+						this.$set(this.attrData[i], "selected", false)
+					}
+				}
+				// this.$set(this.attrData[index], "selected", !this.attrData[index].selected)
 			},
 			reset() {
-				let arr = this.attrData;
-				for (let item of arr) {
-					item.selected = false;
-				}
-				this.attrData = arr
+				// let arr = this.attrData;
+				// for (let item of arr) {
+				// 	item.selected = false;
+				// }
+				// this.attrData = arr
+				this.queryParams.startAdultPrice='';
+				this.queryParams.endAdultPrice='';
+				this.queryParams.startingCity='';
+				this.queryParams.lineType='';
+				this.getProductList();
+				this.drawer = false
+				// 	}
+				this.btnCloseDrop();
+			},
+			queryList:function(){
+			    this.getProductList();
+				this.drawer = false
 			},
 			btnCloseDrop() {
 				this.scrollTop = 1;
@@ -463,17 +533,18 @@
 				let arr = this.attrData;
 				let active = false;
 				let attrName = "";
-				//这里只是为了展示选中效果,并非实际场景
-				for (let item of arr) {
-					if (item.selected) {
-						active = true;
-						attrName += attrName ? ";" + item.name : item.name
-					}
-				}
-				let obj = this.attrArr[index];
+				this.getProductList();
+				// //这里只是为了展示选中效果,并非实际场景
+				// for (let item of arr) {
+				// 	if (item.selected) {
+				// 		active = true;
+				// 		attrName += attrName ? ";" + item.name : item.name
+				// 	}
+				// }
+				// let obj = this.attrArr[index];
 				this.btnCloseDrop();
-				this.$set(obj, "isActive", active);
-				this.$set(obj, "selectedName", attrName);
+				// this.$set(obj, "isActive", active);
+				// this.$set(obj, "selectedName", attrName);
 			},
 			showDropdownList: function() {
 				this.selectH = 246;
@@ -509,6 +580,8 @@
 				}
 			},
 			closeDrawer: function() {
+				debugger;
+				console.log(this.queryParams);
 				this.drawer = false
 			},
 			back: function() {

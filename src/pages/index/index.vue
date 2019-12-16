@@ -119,7 +119,7 @@
 			}
 		},
 		//第一次加载
-		onLoad:function() {
+		onShow:function() {
 			this.getProductList();
 		},
 		methods: {
@@ -129,11 +129,15 @@
 					method:"GET",
 					data:{
 						page:this.productListPage.currPage,
-						limit:1
+						limit:10
 					}
 				});
 				data.then((v)=>{
-					this.productListPage.list=this.productListPage.list.concat(v.list);
+					if(v.currPage===1){
+						this.productListPage.list=v.list;
+					}else{
+						this.productListPage.list=this.productListPage.list.concat(v.list);
+					}
 					this.productListPage.totalPage=v.totalPage;
 					this.productListPage.currPage=v.currPage;
 				});
