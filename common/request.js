@@ -1,5 +1,10 @@
 //公共js,以及基本方法封装 nvue里使用
 const fetch = {
+	//图片接口地址
+	imageUrl:function(){
+		//接口地址
+		return "http://192.168.2.183:8081";
+	},
 	interfaceUrl: function() {
 		//接口地址
 		return "http://192.168.2.183:8080";
