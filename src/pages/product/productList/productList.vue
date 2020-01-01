@@ -304,19 +304,19 @@
 					list: [{
 						name: "国内游",
 						selected: false,
-						value:'1'
+						value:'2'
 					}, {
 						name: "境外游",
 						selected: false,
-						value:'2'
+						value:'4'
 					}, {
 						name: "一日游",
 						selected: false,
-						value:'3'
+						value:'1'
 					}, {
 						name: "赴台游",
 						selected: false,
-						value:'4'
+						value:'3'
 					},
 					]
 				}, {
